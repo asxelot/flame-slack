@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-sm-2 sidebar">
+    <ul>
+      <li>
+        <a href="#">{{user.username}}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-10 chat">
+    <div class="messages">
+      <div ng-repeat="message in messages" class="message">
+        <p>{{message.text}}</p>
+      </div>
+    </div>
+    <form name="msgForm" id="msg">
+      <div class="form-group">
+        <textarea name="msg" 
+                  rows="1" 
+                  ng-model="msg.text" 
+                  ng-enter="addMessage()" 
+                  class="form-control"></textarea>
+      </div>
+    </form>
+  </div>
+</div>

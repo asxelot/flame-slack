@@ -6,19 +6,30 @@
       </li>
     </ul>
   </div>
-  <div class="col-sm-10 chat">
+  <div class="col-sm-10 chat" ng-scroll>
     <div class="messages">
-      <div ng-repeat="message in messages" class="message">
-        <p>{{message.text}}</p>
+      <div class="media message" ng-repeat="message in messages">
+        <div class="media-left">
+          <a href="#">
+            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object">
+          </a>
+        </div>
+        <div class="media-body">
+          <h5 class="media-heading">
+            {{message.author.username}}
+            <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
+          </h5>
+          <p>{{message.text}}</p>
+        </div>
       </div>
     </div>
     <form name="msgForm" id="msg">
       <div class="form-group">
-        <textarea name="msg" 
-                  rows="1" 
-                  ng-model="msg.text" 
-                  ng-enter="addMessage()" 
-                  class="form-control"></textarea>
+        <input type="text" 
+                name="msg" 
+                ng-model="msg.text" 
+                ng-enter="addMessage()" 
+                class="form-control"></input>
       </div>
     </form>
   </div>

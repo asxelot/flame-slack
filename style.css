@@ -21,13 +21,25 @@ body {
   }
 
 .chat {
-  height: 100%;
-  position: relative;
+  height: calc(100% - 50px);
+  max-height: 100%;
+  overflow-y: scroll;
+}
+
+.message h5 {
+  font-weight: bold;
+}
+.message img {
+  height: 36px;
+  width: 36px;
+}
+.time {
+  font-weight: normal;
 }
 
 #msg {
-  position: absolute;
-  width: 100%;
+  position: fixed;
+  width: inherit;
   bottom: 0;
   padding-right: 15px;
 }

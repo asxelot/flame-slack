@@ -46,7 +46,7 @@ angular.module('FlameSlackApp')
     $scope.messages = Messages($scope.channel)
 
     $scope.addMessage = function() {
-      $scope.msg.author = $scope.user.username
+      $scope.msg.author = $scope.user
       $scope.msg.channel = $scope.channel
       $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
 

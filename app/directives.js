@@ -5,11 +5,11 @@ angular.module('FlameSlackApp')
       link: function(scope, el) {
         el.on('keypress', function(e) {
           if (e.keyCode == 13 && e.shiftKey) {
-            el[0].style.height = el[0].scrollHeight + 22 + 'px'
+            el.css('height', el[0].scrollHeight + 22 + 'px')
             scope.$emit('form-height')
           } else if (e.keyCode == 13) {
             scope.addMessage()
-            el[0].style.height = '34px'
+            el.css('hegiht', '34px')
             scope.$emit('form-height')
           }
         })

@@ -6,12 +6,29 @@ angular.module('FlameSlackApp')
 
   .factory('Users', function($firebaseArray, $firebaseObject, FB) {
     var usersRef = new Firebase(FB + 'users'),
+        connectedRef = new Firebase(FB + '.info/connected'),
         users = $firebaseArray(usersRef)
 
     return {
       getProfile: function(uid) {
         return $firebaseObject(usersRef.child(uid))
-      }
+      },
+      setOnline: function(uid) {
+        var connected = $firebaseObject(connectedRef)
+            online = $firebaseArray(usersRef.child(uid + '/online'))
+
+        connected.$watch(function() {
+          if (connected.$value === true) {
+            online.$add(true).then(function(connectedRef) {
+              connectedRef.onDisconnect().remove()
+            })
+          }
+        })
+      },
+      setOffline: function(uid) {
+        usersRef.child(uid + '/online').remove()
+      },
+      all: users
     }
   })
 

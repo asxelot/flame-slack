@@ -1,13 +1,34 @@
 <div class="row">
-  <div class="col-sm-2 sidebar">
-    <h4 class="active">{{user.username}}</h3>
+  <div class="col-md-2 col-xs-4 sidebar">
+    <a href="" ng-click="logout()">log out</a>
     <ul>
-      <li ng-repeat="channel in channels">
-        <a href="#">#{{channel.$value}}</a>
+      <li>
+        <p>CHANNELS</p>
+      </li>
+      <li ng-repeat="ch in channels">
+        <a href="#" ng-class="{'current': ch.$value == channel}">
+          #{{ch.$value}}
+        </a>
+      </li>
+      <li ng-if="user.isAdmin">
+        <a href="#">+add channel</a>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <p>USERS</p>
+      </li>
+      <li ng-repeat="user in users">
+        <a href="#" class="user">
+          <i class="glyphicon" ng-class="user.online ? 'glyphicon-check' : 'glyphicon-unchecked'"></i>
+          {{user.username}}    
+        </a>
       </li>
     </ul>
   </div>
-  <div class="col-sm-10 chat" ng-autoscroll>
+  <!-- /.sidebar -->
+  <div class="col-md-10 col-xs-8 chat" ng-autoscroll>
     <div class="messages">
       <div class="media message" ng-repeat="message in messages">
         <div class="media-left">
@@ -16,7 +37,7 @@
           </a>
         </div>
         <div class="media-body">
-          <h5 class="media-heading" ng-hide="message.author.username == messages[$index-1].author.username">
+          <h5 class="media-heading" ng-hide="message.author.id == messages[$index-1].author.id">
             {{message.author.username}}
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>

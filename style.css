@@ -10,11 +10,13 @@ body {
   height: 100%;
   width: 100%;
   position: fixed;
+  margin: 0;
 }
 
 .sidebar {
   background-color: #4D394B;
   height: 100%;
+  padding: 0;
 }
   .sidebar, .sidebar a {
     color: #ab9ba9;
@@ -23,6 +25,23 @@ body {
     color: white;
     font-weight: bold;
   }
+ul {
+  list-style: none;
+}
+li a {
+  display: block;
+  padding: 0 15px;
+  border-radius: 3px;
+  font-size: 1.1em;
+}
+li a:hover {
+  background-color: #3e313c;
+  text-decoration: none;
+}
+li a.current {
+  background-color: #4C9689;
+  color: white;
+}
 
 .chat {
   height: calc(100% - 50px);
@@ -52,9 +71,9 @@ body {
   position: fixed;
   width: inherit;
   bottom: 0;
-  padding-right: 15px;
+  padding-right: 30px;
 }
   #msg textarea {
-    height: auto;
+    height: 34px;
     resize: none;
   }

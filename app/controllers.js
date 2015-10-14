@@ -12,26 +12,26 @@ angular.module('FlameSlackApp')
   .controller('AuthCtrl', function($scope, $location, Auth, Users) {
     $scope.newUser = {}
 
-    function login() {
-      return Auth.$authWithPassword($scope.newUser)
-    }
-
     $scope.login = function() {
-      login().then(function() {
-        $location.path('/')
-      })
+      Auth.$authWithPassword($scope.newUser)
+        .then(function() {
+          $location.path('/')
+        })
     }
 
     $scope.register = function() {
       Auth.$createUser($scope.newUser)
         .then(function(authData) {
-          var profile = Users.getProfile(authData.uid)
 
-          return login()
+          return Auth.$authWithPassword($scope.newUser)
         })
         .then(function(authData) {
+          var profile = Users.getProfile(authData.uid)
+
           profile.username = $scope.newUser.username
           profile.avatar = authData.password.profileImageURL
+          profile.isAdmin = false
+          profile.isBanned = false
           profile.$save()
           $location.path('/')
         })
@@ -39,15 +39,16 @@ angular.module('FlameSlackApp')
   })
 
   .controller('ChannelCtrl', function($scope, $routeParams,
-                              Channels, Messages) {
+                              channels, Messages) {
     $scope.msg = {}
-    $scope.channels = Channels
+    $scope.channels = channels
     $scope.channel = $routeParams.channel
     $scope.messages = Messages($scope.channel)
 
     $scope.addMessage = function() {
       if (!$scope.msg.text) return 
       $scope.msg.author = $scope.user
+      $scope.msg.author.id = $scope.user.$id
       $scope.msg.channel = $scope.channel
       $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
 

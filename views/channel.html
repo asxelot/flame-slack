@@ -1,8 +1,9 @@
 <div class="row">
   <div class="col-sm-2 sidebar">
+    <h4 class="active">{{user.username}}</h3>
     <ul>
-      <li>
-        <a href="#">{{user.username}}</a>
+      <li ng-repeat="channel in channels">
+        <a href="#">#{{channel.$value}}</a>
       </li>
     </ul>
   </div>
@@ -11,11 +12,11 @@
       <div class="media message" ng-repeat="message in messages">
         <div class="media-left">
           <a href="#">
-            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object">
+            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[$index-1].author.id">
           </a>
         </div>
         <div class="media-body">
-          <h5 class="media-heading">
+          <h5 class="media-heading" ng-hide="message.author.username == messages[$index-1].author.username">
             {{message.author.username}}
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>

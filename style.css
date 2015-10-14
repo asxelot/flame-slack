@@ -16,8 +16,12 @@ body {
   background-color: #4D394B;
   height: 100%;
 }
-  .sidebar a {
+  .sidebar, .sidebar a {
     color: #ab9ba9;
+  }
+  .sidebar .active {
+    color: white;
+    font-weight: bold;
   }
 
 .chat {
@@ -26,11 +30,18 @@ body {
   overflow-y: scroll;
 }
 
+.message {
+  margin-top: 10px;
+}
 .message h5 {
   font-weight: bold;
 }
 .message img {
   height: 36px;
+  width: 36px;
+}
+.message .media-left a {
+  display: block;
   width: 36px;
 }
 .time {

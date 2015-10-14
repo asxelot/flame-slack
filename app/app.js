@@ -14,6 +14,11 @@ angular.module('FlameSlackApp', ['ngRoute', 'firebase'])
       })
       .when('/channels/:channel', {
         controller: 'ChannelCtrl',
-        templateUrl: 'views/channel.html'
+        templateUrl: 'views/channel.html',
+        resolve: {
+          channels: function(Channels) {
+            return Channels.$loaded()
+          }
+        }
       })
   })

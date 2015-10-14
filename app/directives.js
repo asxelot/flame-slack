@@ -17,7 +17,7 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .directive('ngScroll', function($rootScope) {
+  .directive('ngAutoscroll', function($rootScope) {
     return {
       link: function(scope, el, attrs) {
         var form = document.getElementById('msg'),

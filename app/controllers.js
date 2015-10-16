@@ -1,12 +1,13 @@
 angular.module('FlameSlackApp')
 
-  .controller('MainCtrl', function($scope, Auth, Users) {
+  .controller('MainCtrl', function($scope, $location, Auth, Users) {
     Auth.$onAuth(function(authData) {
       if (authData) {
         $scope.user = Users.getProfile(authData.uid)
         Users.setOnline(authData.uid)
       } else {
         $scope.user = null
+        $location.path('/login')
       }
     })
 
@@ -48,8 +49,10 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams,
-                              channels, Messages, Users) {
+  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, $location,
+                              channels, isLogged, Messages, Users) {
+    if (!isLogged) $location.path('/login')
+
     $scope.msg = {}
     $scope.channels = channels
     $scope.channel = $routeParams.channel

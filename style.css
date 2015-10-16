@@ -3,15 +3,24 @@
   padding: 0;
   box-sizing: border-box;
 }
+.nav, .pagination, .carousel, .panel-title a, a { 
+  cursor: pointer; 
+}
+
+/*Global*/
+
 body {
   font: 16px/1.3 sans-serif;
 }
+
 .row {
   height: 100%;
   width: 100%;
   position: fixed;
   margin: 0;
 }
+
+/*Sidebar*/
 
 .sidebar {
   background-color: #4D394B;
@@ -25,16 +34,18 @@ body {
     color: white;
     font-weight: bold;
   }
+
 ul {
+  margin-top: 20px;
   list-style: none;
 }
 li a {
   display: block;
-  padding: 0 15px;
+  padding: 2px 15px;
   border-radius: 3px;
   font-size: 1.1em;
 }
-li a:hover {
+li a:hover, li a:focus {
   background-color: #3e313c;
   text-decoration: none;
 }
@@ -42,6 +53,8 @@ li a.current {
   background-color: #4C9689;
   color: white;
 }
+
+/*Chat*/
 
 .chat {
   height: calc(100% - 50px);

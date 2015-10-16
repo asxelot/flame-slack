@@ -1,4 +1,4 @@
-angular.module('FlameSlackApp', ['ngRoute', 'firebase'])
+angular.module('FlameSlackApp', ['ngRoute', 'firebase', 'ui.bootstrap'])
 
   .constant('FB', 'https://flame-slack.firebaseio.com/')
 
@@ -18,7 +18,11 @@ angular.module('FlameSlackApp', ['ngRoute', 'firebase'])
         resolve: {
           channels: function(Channels) {
             return Channels.$loaded()
+          },
+          isLogged: function(Auth) {
+            return Auth.$requireAuth()
           }
         }
       })
   })
+

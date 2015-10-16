@@ -1,17 +1,30 @@
 <div class="row">
   <div class="col-md-2 col-xs-4 sidebar">
-    <a href="" ng-click="logout()">log out</a>
+    <ul>
+      <li>
+        <span uib-dropdown>
+          <a href uib-dropdown-toggle>
+            {{user.username}} <i class="glyphicon glyphicon-menu-down"></i>
+          </a>
+          <ul class="uib-dropdown-menu">
+            <li>
+              <a href ng-click="logout()">log out</a>
+            </li>
+          </ul>
+        </span>
+      </li>
+    </ul>
     <ul>
       <li>
         <p>CHANNELS</p>
       </li>
       <li ng-repeat="ch in channels">
-        <a href="#" ng-class="{'current': ch.$value == channel}">
+        <a href ng-class="{'current': ch.$value == channel}">
           #{{ch.$value}}
         </a>
       </li>
       <li ng-if="user.isAdmin">
-        <a href="#">+add channel</a>
+        <a href>+add channel</a>
       </li>
     </ul>
 
@@ -20,7 +33,7 @@
         <p>USERS</p>
       </li>
       <li ng-repeat="user in users">
-        <a href="#" class="user">
+        <a href class="user">
           <i class="glyphicon" ng-class="user.online ? 'glyphicon-check' : 'glyphicon-unchecked'"></i>
           {{user.username}}    
         </a>
@@ -32,7 +45,7 @@
     <div class="messages">
       <div class="media message" ng-repeat="message in messages">
         <div class="media-left">
-          <a href="#">
+          <a href>
             <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[$index-1].author.id">
           </a>
         </div>
@@ -45,7 +58,7 @@
         </div>
       </div>
     </div>
-    <form name="msgForm" id="msg">
+    <form name="msgForm" id="msg" ng-submit="addMessage()">
       <div class="form-group">
         <textarea name="msg" 
                   rows="1"

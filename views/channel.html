@@ -4,7 +4,7 @@
       <li>
         <span uib-dropdown>
           <a href uib-dropdown-toggle>
-            {{user.username}} <i class="glyphicon glyphicon-menu-down"></i>
+            {{user.username}} <span class="caret"></span></i>
           </a>
           <ul class="uib-dropdown-menu">
             <li>
@@ -19,12 +19,34 @@
         <p>CHANNELS</p>
       </li>
       <li ng-repeat="ch in channels">
-        <a href ng-class="{'current': ch.$value == channel}">
+        <a href="#/channels/{{ch.$value}}" ng-class="{'current': ch.$value == channel}">
           #{{ch.$value}}
         </a>
       </li>
-      <li ng-if="user.isAdmin">
-        <a href>+add channel</a>
+      <li ng-show="user.isAdmin && isNewChannelFormHidden">
+        <a href ng-click="isNewChannelFormHidden = !isNewChannelFormHidden">
+          +add channel
+        </a>
+      </li>
+      <li ng-show="user.isAdmin && !isNewChannelFormHidden">
+        <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
+          <div class="form-group">
+            <input type="text" 
+                   ng-model="newChannelName" 
+                   class="form-control"
+                   pattern="^\w{3,10}$"
+                   required>
+            <div class="input-error popover bottom">
+              <div class="arrow"></div>
+              <div class="popover-inner">
+                <div class="popover-content">
+                  Use letters and numbers, more then 2 and less then 10
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="hidden">Submit</button>
+        </form>
       </li>
     </ul>
 

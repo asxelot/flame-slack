@@ -20,6 +20,11 @@ body {
   margin: 0;
 }
 
+.form-control.ng-invalid, 
+.form-control.ng-invalid:focus {
+  border-color: red;
+}
+
 /*Sidebar*/
 
 .sidebar {
@@ -34,6 +39,27 @@ body {
     color: white;
     font-weight: bold;
   }
+  .sidebar form {
+    width: 100%;
+  }
+  .sidebar .form-group {
+    width: calc(100% - 30px);
+    margin: 0 15px;
+  }
+  .sidebar .form-control {
+    width: 100%;
+  }
+
+.form-group {
+  position: relative;
+}
+.input-error {
+  display: none;
+  top: 34px;
+} 
+.form-control.ng-invalid + .input-error{
+  display: block;
+}
 
 ul {
   margin-top: 20px;

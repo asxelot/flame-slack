@@ -9,8 +9,57 @@ angular.module('FlameSlackApp')
         $scope.user = null
         $location.path('/login')
       }
-    })   
+    })  
+
+    $scope.logout = function() {
+      Users.setOffline($scope.user.$id)
+      Auth.$unauth()
+    }      
   })
+
+  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, $location,
+                              channels, isLogged, Messages, Users) {
+    if (!isLogged) 
+      return $location.path('/login')
+
+    // if channel exist
+    if (!~channels.map(function(c) {return c.$value}).indexOf($routeParams.channel)) 
+      return $location.path('/channels/' + channels[0].$value)
+
+    $scope.channel = $routeParams.channel
+    $rootScope.title = $scope.channel + ' | Flame Slack'
+    $scope.isNewChannelFormHidden = true
+    $scope.msg = {}
+    $scope.channels = channels
+    $scope.users = Users.all
+
+    if (!$scope.messages) {
+      $rootScope.messages = {}
+      for (var i = 0; i < channels.length; i++)
+        $scope.messages[channels[i].$value] = Messages(channels[i].$value)    
+    }
+    
+    $scope.addMessage = function() {
+      if (!$scope.msg.text) return 
+
+      $scope.msg.author = $scope.user
+      $scope.msg.author.id = $scope.user.$id
+      $scope.msg.channel = $scope.channel
+      $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
+
+      $scope.messages[$scope.channel].$add($scope.msg)
+      $scope.msg = {}
+    }
+
+    $scope.createChannel = function() {
+      if ($scope.newChannelForm.$invalid) return
+        
+      $scope.channels.$add($scope.newChannelName)
+      $scope.messages[$scope.newChannelName] = Messages($scope.newChannelName)
+      $scope.newChannelName = ''
+      $scope.isNewChannelFormHidden = true
+    }
+  })  
 
   .controller('AuthCtrl', function($scope, $location, Auth, Users) {
     $scope.newUser = {}
@@ -30,7 +79,7 @@ angular.module('FlameSlackApp')
           profile.isBanned = false
           profile.$save()
           Users.all.$save()
-          $location.path('/channels/js')
+          $location.path('/channels/index')
         })
     }
 
@@ -38,49 +87,9 @@ angular.module('FlameSlackApp')
       Auth.$authWithPassword($scope.newUser)
         .then(function(authData) {
           Users.setOnline(authData.uid)
-          $location.path('/channels/js')
+          $location.path('/channels/index')
         })
         .catch(console.error)
     }
   })
 
-  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, $location,
-                              channels, isLogged, Messages, Users) {
-    if (!isLogged) $location.path('/login')
-
-    if (!~channels.map(function(e) {return e.$value}).indexOf($routeParams.channel))
-      $location.path('/channels/' + channels[0].$value)
-
-    $scope.isNewChannelFormHidden = true
-    $scope.msg = {}
-    $scope.channels = channels
-    $scope.channel = $routeParams.channel
-    $scope.messages = Messages($scope.channel)
-    $scope.users = Users.all
-    $rootScope.title = $scope.channel + ' | Flame Slack'
-
-    $scope.logout = function() {
-      Users.setOffline($scope.user.$id)
-      Auth.$unauth()
-    } 
-    
-    $scope.addMessage = function() {
-      if (!$scope.msg.text) return 
-
-      $scope.msg.author = $scope.user
-      $scope.msg.author.id = $scope.user.$id
-      $scope.msg.channel = $scope.channel
-      $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
-
-      $scope.messages.$add($scope.msg)
-      $scope.msg = {}
-    }
-
-    $scope.createChannel = function() {
-      if ($scope.newChannelForm.$invalid) return
-        
-      $scope.channels.$add($scope.newChannelName)
-      $scope.newChannelName = ''
-      $scope.isNewChannelFormHidden = true
-    }
-  })

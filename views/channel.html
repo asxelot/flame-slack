@@ -65,7 +65,7 @@
   <!-- /.sidebar -->
   <div class="col-md-10 col-xs-8 chat" ng-autoscroll>
     <div class="messages">
-      <div class="media message" ng-repeat="message in messages">
+      <div class="media message" ng-repeat="message in messages[channel]">
         <div class="media-left">
           <a href>
             <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[$index-1].author.id">

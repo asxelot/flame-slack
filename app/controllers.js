@@ -79,7 +79,7 @@ angular.module('FlameSlackApp')
           profile.isBanned = false
           profile.$save()
           Users.all.$save()
-          $location.path('/channels/index')
+          $location.path('/channels')
         })
     }
 
@@ -87,7 +87,7 @@ angular.module('FlameSlackApp')
       Auth.$authWithPassword($scope.newUser)
         .then(function(authData) {
           Users.setOnline(authData.uid)
-          $location.path('/channels/index')
+          $location.path('/channels')
         })
         .catch(console.error)
     }

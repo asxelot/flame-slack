@@ -12,10 +12,7 @@ angular.module('FlameSlackApp', ['ngRoute', 'firebase', 'ui.bootstrap'])
         controller: 'AuthCtrl',
         templateUrl: 'views/login.html'
       })
-      .when('/channels', {
-        redirectTo: '/channels/index'
-      })
-      .when('/channels/:channel', {
+      .when('/channels/:channel?', {
         controller: 'ChannelCtrl',
         templateUrl: 'views/channel.html',
         resolve: {

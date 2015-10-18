@@ -68,18 +68,20 @@
       <div class="media message" ng-repeat="message in messages[channel]">
         <div class="media-left">
           <a href>
-            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[$index-1].author.id">
+            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[channel][$index-1].author.id">
           </a>
         </div>
         <div class="media-body">
-          <h5 class="media-heading" ng-hide="message.author.id == messages[$index-1].author.id">
+          <h5 class="media-heading" ng-hide="message.author.id == messages[channel][$index-1].author.id">
             {{message.author.username}}
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
           <div>{{message.text}}</div>
         </div>
+        <hr ng-if="message.timestamp < user.lastOnline && ($last || messages[channel][$index+1].timestamp > user.lastOnline)">        
       </div>
     </div>
+    <!-- /.messages -->
     <form name="msgForm" id="msg" ng-submit="addMessage()">
       <div class="form-group">
         <textarea name="msg" 

@@ -24,6 +24,9 @@ angular.module('FlameSlackApp')
             })
           }
         })
+
+        usersRef.child(uid + '/lastOnline')
+          .onDisconnect().set(Firebase.ServerValue.TIMESTAMP)
       },
       setOffline: function(uid) {
         usersRef.child(uid + '/online').remove()

@@ -55,10 +55,13 @@ angular.module('FlameSlackApp')
     $scope.addMessage = function() {
       if (!$scope.msg.text) return 
 
-      $scope.msg.author = $scope.user
-      $scope.msg.author.id = $scope.user.$id
       $scope.msg.channel = $scope.channel
       $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
+      $scope.msg.author = {
+        id: $scope.user.$id,
+        username: $scope.user.username,
+        avatar: $scope.user.avatar
+      }
 
       $scope.messages[$scope.channel].$add($scope.msg)
       $scope.msg = {}

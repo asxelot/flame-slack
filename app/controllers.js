@@ -87,6 +87,7 @@ angular.module('FlameSlackApp')
           profile.avatar = authData.password.profileImageURL
           profile.isAdmin = false
           profile.isBanned = false
+          profile.lastReaded = {}
           profile.$save()
           Users.all.$save()
           $location.path('/channels')

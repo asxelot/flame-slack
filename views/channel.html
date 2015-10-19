@@ -4,7 +4,9 @@
       <li>
         <span uib-dropdown>
           <a href uib-dropdown-toggle>
-            {{user.username}} <span class="caret"></span></i>
+            <i class="circle" ng-class="user ? 'online' : 'offline'"></i>
+            {{user.username}} 
+            <span class="caret"></span></i>
           </a>
           <ul class="uib-dropdown-menu">
             <li>
@@ -60,7 +62,7 @@
       </li>
       <li ng-repeat="user in users">
         <a href class="user">
-          <i class="glyphicon" ng-class="user.online ? 'glyphicon-check' : 'glyphicon-unchecked'"></i>
+          <i class="circle" ng-class="user.online ? 'online' : 'offline'"></i>
           {{user.username}}    
         </a>
       </li>

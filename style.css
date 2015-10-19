@@ -121,8 +121,17 @@ li a.current {
 .time {
   font-weight: normal;
 }
-.message-text {
-  white-space: pre-line;
+.message-text:hover .glyphicon-remove {
+  display: inline-block;
+}
+.glyphicon-remove {
+  display: none;
+  float: right;
+  color: #ddd;
+}
+.glyphicon-remove:hover {
+  color: #333;
+  cursor: pointer;
 }
 
 #msg {

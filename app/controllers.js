@@ -22,6 +22,9 @@ angular.module('FlameSlackApp')
     if (!isLogged) 
       return $location.path('/login')
 
+    if (!channels.length)
+      channels.$add('general')
+
     // if channel exist
     if (!~channels.map(function(c) {return c.$value}).indexOf($routeParams.channel)) 
       return $location.path('/channels/' + channels[0].$value)
@@ -32,7 +35,7 @@ angular.module('FlameSlackApp')
     $scope.msg = {}
     $scope.channels = channels
     $scope.users = Users.all
-    $scope.divider = $scope.user.lastReaded[$scope.channel]
+    $scope.divider = $scope.user.lastReaded && $scope.user.lastReaded[$scope.channel]
 
     if (!$scope.messages) {
       $rootScope.messages = {}
@@ -61,6 +64,10 @@ angular.module('FlameSlackApp')
       $scope.msg = {}
     }
 
+    $scope.remove = function(msg) {
+      $scope.messages[$scope.channel].$remove(msg)
+    }
+
     $scope.createChannel = function() {
       if ($scope.newChannelForm.$invalid) return
         
@@ -87,7 +94,6 @@ angular.module('FlameSlackApp')
           profile.avatar = authData.password.profileImageURL
           profile.isAdmin = false
           profile.isBanned = false
-          profile.lastReaded = {}
           profile.$save()
           Users.all.$save()
           $location.path('/channels')

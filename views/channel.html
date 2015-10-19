@@ -82,7 +82,10 @@
             {{message.author.username}}
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
-          <div class="message-text">{{message.text}}</div>
+          <div class="message-text">
+            {{message.text}}
+            <i class="glyphicon glyphicon-remove" ng-if="user.isAdmin || user.$id === message.author.id" ng-click="remove(message)"></i>
+          </div>
         </div>
         <hr ng-if="message.$id == divider" divider>        
       </div>

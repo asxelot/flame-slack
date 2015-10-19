@@ -105,6 +105,9 @@ li a.current {
 .time {
   font-weight: normal;
 }
+.message-text {
+  white-space: pre-line;
+}
 
 #msg {
   position: fixed;

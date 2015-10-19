@@ -32,13 +32,23 @@ angular.module('FlameSlackApp')
     $scope.msg = {}
     $scope.channels = channels
     $scope.users = Users.all
+    $scope.divider = $scope.user.lastReaded[$scope.channel]
 
     if (!$scope.messages) {
       $rootScope.messages = {}
-      for (var i = 0; i < channels.length; i++)
-        $scope.messages[channels[i].$value] = Messages(channels[i].$value)    
+
+      channels.forEach(function(ch) {
+        var channel = ch.$value
+        $scope.messages[channel] = Messages(channel)
+      })
     }
-    
+
+    $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
+      $scope.user.lastReaded = $scope.user.lastReaded || {}
+      $scope.user.lastReaded[$scope.channel] = msgs.length && msgs[msgs.length-1].$id
+      $scope.user.$save()
+    })
+
     $scope.addMessage = function() {
       if (!$scope.msg.text) return 
 

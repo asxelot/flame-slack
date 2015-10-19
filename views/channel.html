@@ -19,7 +19,10 @@
         <p>CHANNELS</p>
       </li>
       <li ng-repeat="ch in channels">
-        <a href="#/channels/{{ch.$value}}" ng-class="{'current': ch.$value == channel}">
+        <a href="#/channels/{{ch.$value}}" ng-class="{
+          'current': ch.$value == channel, 
+          'active': messages[ch.$value].length && messages[ch.$value][messages[ch.$value].length-1].$id != user.lastReaded[ch.$value]
+        }">
           #{{ch.$value}}
         </a>
       </li>
@@ -32,7 +35,8 @@
         <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
           <div class="form-group">
             <input type="text" 
-                   ng-model="newChannelName" 
+                   ng-model="newChannelName" ]
+                   ng-keydown="isNewChannelFormHidden = $event.keyCode == 27"
                    class="form-control"
                    pattern="^\w{3,10}$"
                    required>
@@ -76,20 +80,19 @@
             {{message.author.username}}
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
-          <div>{{message.text}}</div>
+          <div class="message-text">{{message.text}}</div>
         </div>
-        <hr ng-if="message.timestamp < user.lastOnline && ($last || messages[channel][$index+1].timestamp > user.lastOnline)">        
+        <hr ng-if="message.$id == divider" divider>        
       </div>
     </div>
     <!-- /.messages -->
     <form name="msgForm" id="msg" ng-submit="addMessage()">
       <div class="form-group">
-        <textarea name="msg" 
-                  rows="1"
-                  ng-model="msg.text" 
-                  ng-enter="addMessage()"
-                  class="form-control"></textarea>
+        <input  name="msg" 
+                ng-model="msg.text" 
+                class="form-control"></input>
       </div>
+      <button type="submit" class="hidden">submit</button>
     </form>
   </div>
 </div>

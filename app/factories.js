@@ -30,6 +30,7 @@ angular.module('FlameSlackApp')
       },
       setOffline: function(uid) {
         usersRef.child(uid + '/online').remove()
+        usersRef.child(uid + '/lastOnline').set(Firebase.ServerValue.TIMESTAMP)
       },
       all: users
     }

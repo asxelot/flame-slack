@@ -1,4 +1,8 @@
-angular.module('FlameSlackApp', ['ngRoute', 'firebase', 'ui.bootstrap'])
+angular.module('FlameSlackApp', [
+  'ngRoute', 
+  'firebase', 
+  'ui.bootstrap'
+])
 
   .constant('FB', 'https://flame-slack.firebaseio.com/')
 

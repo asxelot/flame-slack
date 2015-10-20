@@ -1,12 +1,12 @@
 angular.module('FlameSlackApp')
 
-  .controller('MainCtrl', function($scope, $location, Auth, Users) {
+  .controller('MainCtrl', function($scope, $rootScope, $location, Auth, Users) {
     Auth.$onAuth(function(authData) {
       if (authData) {
-        $scope.user = Users.getProfile(authData.uid)
+        $rootScope.user = Users.getProfile(authData.uid)
         Users.setOnline(authData.uid)
       } else {
-        $scope.user = null
+        $rootScope.user = null
         $location.path('/login')
       }
     })  
@@ -34,7 +34,7 @@ angular.module('FlameSlackApp')
     $scope.isNewChannelFormHidden = true
     $scope.msg = {}
     $scope.channels = channels
-    $scope.users = Users.all
+    $rootScope.users = Users.all
     $scope.divider = $scope.user.lastReaded && $scope.user.lastReaded[$scope.channel]
 
     if (!$scope.messages) {
@@ -50,6 +50,10 @@ angular.module('FlameSlackApp')
       $scope.user.lastReaded = $scope.user.lastReaded || {}
       $scope.user.lastReaded[$scope.channel] = msgs.length && msgs[msgs.length-1].$id
       $scope.user.$save()
+    })
+
+    $scope.$on('mention', function() {
+      console.log('mention!!!')
     })
 
     $scope.addMessage = function() {

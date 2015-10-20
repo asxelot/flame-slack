@@ -144,3 +144,6 @@ li a.current {
     height: 34px;
     resize: none;
   }
+.mention {
+  background-color: yellow;
+}

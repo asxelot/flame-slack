@@ -1,12 +1,35 @@
 angular.module('FlameSlackApp')
 
-  .filter('link', function() {
-    return function(text) {
-      var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?/gi
 
+  .filter('escape', function() {
+    var entityMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': '&quot;',
+      "'": '&#39;'
+    }
+
+    return function(string) {
+      return String(string).replace(/[&<>"']/g, function(s) {
+        return entityMap[s]
+      })
+    }
+  })
+
+  .filter('link', function() {
+    var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.-]*)*\/?/gi
+    var imageRegExp = /\.(jpg|jpeg|png|gif)/
+
+    return function(text) {
       return text.replace(linkRegExp, function(link, protocol) {
-        return '<a href="' + (protocol ? '' : 'http://') + 
-                link + '" target="_blank">' + link + '</a>'
+        var html = '<a href="' + (protocol ? '' : 'http://') + 
+                    link + '" target="_blank">' + link + '</a>'
+
+        if (imageRegExp.test(link))
+          html += '<img src="' + link + '">'
+
+        return html
       })
     }
   })
@@ -19,8 +42,7 @@ angular.module('FlameSlackApp')
         var currentUser = $rootScope.user.username == username
 
         if (~users.indexOf(username)) {
-          if (currentUser)
-            $rootScope.$broadcast('mention')
+          if (currentUser) $rootScope.$broadcast('mention')
 
           return '<a href="#/user/' + username + '"' +
                  (currentUser ? 'class="mention"' : '') +
@@ -33,7 +55,6 @@ angular.module('FlameSlackApp')
   })
 
   .filter('trustAsHtml', function($sce){
-    return function(text) {
-      return $sce.trustAsHtml(text)
-    }
+    return $sce.trustAsHtml
   })
+

@@ -121,12 +121,23 @@ li a.current {
 .time {
   font-weight: normal;
 }
+.message-text {
+  position: relative;
+}
 .message-text:hover .glyphicon-remove {
   display: inline-block;
 }
+.message-text img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 500px;
+}
 .glyphicon-remove {
   display: none;
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 0;
   color: #ddd;
 }
 .glyphicon-remove:hover {

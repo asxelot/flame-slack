@@ -83,7 +83,7 @@
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
           <div class="message-text">
-            <span ng-bind-html="message.text | link | username | trustAsHtml"></span>
+            <div ng-bind-html="message.text | escape | link | username | trustAsHtml"></div>
             <i class="glyphicon glyphicon-remove" ng-if="user.isAdmin || user.$id === message.author.id" ng-click="remove(message)"></i>
           </div>
         </div>

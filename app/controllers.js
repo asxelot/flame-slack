@@ -47,10 +47,27 @@ angular.module('FlameSlackApp')
       })
     }
 
+    // if new channel created
+    $scope.channels.$watch(function(val) {
+      var channel = $scope.channels.$getRecord(val.key).$value
+      $scope.messages[channel] = Messages(channel)
+    })  
+
+    // last readed messages
     $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
       $scope.user.lastReaded = $scope.user.lastReaded || {}
       $scope.user.lastReaded[$scope.channel] = msgs.length && msgs[msgs.length-1].$id
       $scope.user.$save()
+    })
+
+    // new message
+    new Firebase(FB + 'messages/').on('child_changed', function() {
+      if (!$scope.isTabActive) Title.add('* ')
+    })
+
+    // mention
+    $scope.$on('mention', function() {
+      if (!$scope.isTabActive) Title.add('! ')
     })
 
     $scope.$on('tab-active', function(e, active) {
@@ -58,14 +75,6 @@ angular.module('FlameSlackApp')
         Title.remove('* ')
         Title.remove('! ')
       }
-    })
-
-    $scope.$on('mention', function() {
-      if (!$scope.isTabActive) Title.add('! ')
-    })
-
-    new Firebase(FB + 'messages/').on('child_changed', function() {
-      if (!$scope.isTabActive) Title.add('* ')
     })
 
     $scope.addMessage = function() {

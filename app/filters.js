@@ -58,3 +58,4 @@ angular.module('FlameSlackApp')
     return $sce.trustAsHtml
   })
 
+

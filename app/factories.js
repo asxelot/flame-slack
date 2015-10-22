@@ -41,7 +41,27 @@ angular.module('FlameSlackApp')
   })
 
   .factory('Messages', function($firebaseArray, FB) {
+    var msgRef = new Firebase(FB + 'messages/')
+
     return function(channel) {
-      return $firebaseArray(new Firebase(FB + 'messages/' + channel))
+      return $firebaseArray(msgRef.child(channel))
     }
+  })
+
+  .factory('Title', function($rootScope, FB) {
+    var Title = {
+      set: function(channel) {
+        $rootScope.title = channel + ' | Flame Slack'
+      },
+      add: function(s) {
+        if (!~$rootScope.title.indexOf(s))
+          $rootScope.title = s + $rootScope.title
+      },
+      remove: function(s) {
+        if (~$rootScope.title.indexOf(s))
+          $rootScope.title = $rootScope.title.replace(s, '')
+      }
+    }
+
+    return Title
   })

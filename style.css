@@ -52,20 +52,15 @@ body {
     width: 100%;
   }
 
-i.circle.online {
+i.circle {
   display: inline-block;
   height: 0.7em;
   width:  0.7em;
   border: 2px solid #ab9ba9;
   border-radius: 50%;
-  background-color: #ab9ba9;
 }
-i.circle.offline {
-  display: inline-block;
-  height: 0.7em;
-  width:  0.7em;
-  border: 2px solid #ab9ba9;
-  border-radius: 50%;
+i.circle.online {
+  background-color: #ab9ba9;
 }
 
 .form-group {
@@ -135,7 +130,7 @@ li a.current {
   display: block;
   width: auto;
   height: auto;
-  max-height: 500px;
+  max-height: 400px;
 }
 .glyphicon-remove {
   display: none;

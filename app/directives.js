@@ -4,7 +4,7 @@ angular.module('FlameSlackApp')
     function link(scope, el) {
       var isScrolled = false
 
-      el.on('DOMNodeInserted', function() {
+      el.on('DOMSubtreeModified', function() {
         if (isScrolled) el[0].scrollTop = el[0].scrollHeight
       })
 
@@ -35,6 +35,24 @@ angular.module('FlameSlackApp')
   .directive('divider', function() {
     function link(scope, el) {
       scope.$emit('dividerTop', el[0].offsetTop - 150)
+    }
+
+    return {
+      link: link
+    }
+  })
+
+  .directive('ngTabActive', function($window, $rootScope,  Title) {
+    function link() {
+      angular.element($window)
+        .on('focus', function() {
+          $rootScope.isTabActive = true
+          $rootScope.$broadcast('tab-active', true)
+        })
+        .on('blur', function() {
+          $rootScope.isTabActive = false
+          $rootScope.$broadcast('tab-active', false)
+        })
     }
 
     return {

@@ -18,7 +18,7 @@ angular.module('FlameSlackApp')
   })
 
   .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, $location,
-                              channels, isLogged, Messages, Users) {
+                              channels, isLogged, Messages, Users, Title, FB) {
     if (!isLogged) 
       return $location.path('/login')
 
@@ -30,12 +30,13 @@ angular.module('FlameSlackApp')
       return $location.path('/channels/' + channels[0].$value)
 
     $scope.channel = $routeParams.channel
-    $rootScope.title = $scope.channel + ' | Flame Slack'
     $scope.isNewChannelFormHidden = true
     $scope.msg = {}
     $scope.channels = channels
     $rootScope.users = Users.all
     $scope.divider = $scope.user.lastReaded && $scope.user.lastReaded[$scope.channel]
+    
+    Title.set($scope.channel)
 
     if (!$scope.messages) {
       $rootScope.messages = {}
@@ -52,8 +53,19 @@ angular.module('FlameSlackApp')
       $scope.user.$save()
     })
 
+    $scope.$on('tab-active', function(e, active) {
+      if (active) {
+        Title.remove('* ')
+        Title.remove('! ')
+      }
+    })
+
     $scope.$on('mention', function() {
-      console.log('mention!!!')
+      if (!$scope.isTabActive) Title.add('! ')
+    })
+
+    new Firebase(FB + 'messages/').on('child_changed', function() {
+      if (!$scope.isTabActive) Title.add('* ')
     })
 
     $scope.addMessage = function() {

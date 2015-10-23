@@ -72,8 +72,7 @@ angular.module('FlameSlackApp')
 
     $scope.$on('tab-active', function(e, active) {
       if (active) {
-        Title.remove('* ')
-        Title.remove('! ')
+        Title.remove()
       }
     })
 

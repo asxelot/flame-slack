@@ -5,6 +5,7 @@ angular.module('FlameSlackApp')
       if (authData) {
         $rootScope.user = Users.getProfile(authData.uid)
         Users.setOnline(authData.uid)
+        $rootScope.isAdmin = Users.isAdmin(authData.uid)
       } else {
         $rootScope.user = null
         $location.path('/login')
@@ -119,8 +120,6 @@ angular.module('FlameSlackApp')
 
           profile.username = $scope.newUser.username
           profile.avatar = authData.password.profileImageURL
-          profile.isAdmin = false
-          profile.isBanned = false
           profile.$save()
           Users.all.$save()
           $location.path('/channels')

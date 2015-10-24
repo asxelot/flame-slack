@@ -28,16 +28,16 @@
           #{{ch.$value}}
         </a>
       </li>
-      <li ng-show="user.isAdmin && isNewChannelFormHidden">
+      <li ng-show="isAdmin.$value && isNewChannelFormHidden">
         <a href ng-click="isNewChannelFormHidden = !isNewChannelFormHidden">
           +add channel
         </a>
       </li>
-      <li ng-show="user.isAdmin && !isNewChannelFormHidden">
+      <li ng-show="isAdmin.$value && !isNewChannelFormHidden">
         <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
           <div class="form-group">
             <input type="text" 
-                   ng-model="newChannelName" ]
+                   ng-model="newChannelName"
                    ng-keydown="isNewChannelFormHidden = $event.keyCode == 27"
                    class="form-control"
                    pattern="^\w{3,10}$"
@@ -84,7 +84,7 @@
           </h5>
           <div class="message-text">
             <div ng-bind-html="message.text | escape | link | username | trustAsHtml"></div>
-            <i class="glyphicon glyphicon-remove" ng-if="user.isAdmin || user.$id === message.author.id" ng-click="remove(message)"></i>
+            <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
           </div>
         </div>
         <hr ng-if="message.$id == divider" divider>        
@@ -96,6 +96,7 @@
         <input  name="msg" 
                 ng-model="msg.text" 
                 ng-focus
+                autocomplete="off"
                 class="form-control"></input>
       </div>
       <button type="submit" class="hidden">submit</button>

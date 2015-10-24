@@ -4,7 +4,7 @@ angular.module('FlameSlackApp')
     return $firebaseAuth(new Firebase(FB))
   })
 
-  .factory('Users', function($firebaseArray, $firebaseObject, FB) {
+  .factory('Users', function($q, $firebaseArray, $firebaseObject, FB) {
     var usersRef = new Firebase(FB + 'users'),
         connectedRef = new Firebase(FB + '.info/connected'),
         users = $firebaseArray(usersRef)
@@ -31,6 +31,9 @@ angular.module('FlameSlackApp')
       setOffline: function(uid) {
         usersRef.child(uid + '/online').remove()
         usersRef.child(uid + '/lastOnline').set(Firebase.ServerValue.TIMESTAMP)
+      },
+      isAdmin: function(uid) {
+        return $firebaseObject(new Firebase(FB).child('admins').child(uid))
       },
       all: users
     }

@@ -28,17 +28,19 @@
           #{{ch}}
         </a>
       </li>
-      <li ng-show="isAdmin.$value && isNewChannelFormHidden">
-        <a href ng-click="isNewChannelFormHidden = !isNewChannelFormHidden">
+      <li ng-show="isAdmin.$value && !isNewChannelFormShowed">
+        <a href ng-click="isNewChannelFormShowed = !isNewChannelFormShowed">
           +add channel
         </a>
       </li>
-      <li ng-show="isAdmin.$value && !isNewChannelFormHidden">
+      <li ng-show="isAdmin.$value && isNewChannelFormShowed">
         <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
           <div class="form-group">
             <input type="text" 
+                   ng-focus
                    ng-model="newChannelName"
-                   ng-keydown="isNewChannelFormHidden = $event.keyCode == 27"
+                   ng-show="isAdmin.$value && isNewChannelFormShowed"
+                   ng-keydown="isNewChannelFormShowed = $event.keyCode != 27"
                    class="form-control"
                    pattern="^\w{3,10}$"
                    required>

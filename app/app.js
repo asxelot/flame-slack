@@ -9,13 +9,18 @@ angular.module('FlameSlackApp', [
 
   .config(function($routeProvider) {
     $routeProvider
-      .when('/register', {
-        controller: 'AuthCtrl',
-        templateUrl: 'views/register.html'
-      })
       .when('/login', {
-        controller: 'AuthCtrl',
+        controller: 'LoginCtrl',
         templateUrl: 'views/login.html'
+      })
+      .when('/register', {
+        controller: 'RegisterCtrl',
+        templateUrl: 'views/register.html',
+        resolve: {
+          usernames: function(Usernames) {
+            return Usernames.$loaded()
+          }
+        }
       })
       .when('/channels/:channel?', {
         controller: 'ChannelCtrl',

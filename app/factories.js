@@ -39,6 +39,10 @@ angular.module('FlameSlackApp')
     }
   })
 
+  .factory('Usernames', function($firebaseObject, FB) {
+    return $firebaseObject(new Firebase(FB + 'usernames'))
+  })
+
   .factory('Channels', function($firebaseObject, FB) {
     return $firebaseObject(new Firebase(FB + 'channels'))
   })

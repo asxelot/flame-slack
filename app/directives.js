@@ -23,7 +23,7 @@ angular.module('FlameSlackApp')
   })
 
   .directive('ngFocus', function() {
-    function link(scope, el) {
+    function link(scope, el, attrs) {
       el[0].focus()
     }
 
@@ -56,6 +56,19 @@ angular.module('FlameSlackApp')
     }
 
     return {
+      link: link
+    }
+  })
+
+  .directive('uniqueUsername', function() {
+    function link(scope, el, attrs, ngModel) {
+      ngModel.$validators.uniqueUsername = function(val) {
+        return !scope.usernames[val]
+      }
+    }
+
+    return {
+      require: 'ngModel',
       link: link
     }
   })

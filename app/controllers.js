@@ -1,6 +1,7 @@
 angular.module('FlameSlackApp')
 
-  .controller('MainCtrl', function($scope, $rootScope, $location, Auth, Users) {
+  .controller('MainCtrl', function($scope, $rootScope, $location, 
+                          Auth, Users, Usernames) {
     Auth.$onAuth(function(authData) {
       if (authData) {
         $rootScope.user = Users.getProfile(authData.uid)
@@ -18,8 +19,9 @@ angular.module('FlameSlackApp')
     }      
   })
 
-  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, $location,
-                              channels, isLogged, Messages, Users, Title, FB) {
+  .controller('ChannelCtrl', function($scope, $rootScope, $routeParams, 
+                              $location, channels, isLogged, Messages, Users, 
+                              Title, FB) {
     if (!isLogged) 
       return $location.path('/login')
 
@@ -28,10 +30,10 @@ angular.module('FlameSlackApp')
 
     $scope.channel = $routeParams.channel
     $scope.channels = channels
-    $scope.isNewChannelFormHidden = true
     $scope.msg = {}
     $rootScope.users = Users.all
-    $scope.divider = $scope.user.lastReaded && $scope.user.lastReaded[$scope.channel]
+    $scope.divider = $scope.user.lastReaded && 
+                     $scope.user.lastReaded[$scope.channel]
     
     Title.set($scope.channel)
 
@@ -44,7 +46,8 @@ angular.module('FlameSlackApp')
     // last readed messages
     $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
       $scope.user.lastReaded = $scope.user.lastReaded || {}
-      $scope.user.lastReaded[$scope.channel] = msgs.length && msgs[msgs.length-1].$id
+      $scope.user.lastReaded[$scope.channel] = msgs.length && 
+                                               msgs[msgs.length-1].$id
       $scope.user.$save()
     })
 
@@ -92,10 +95,16 @@ angular.module('FlameSlackApp')
     }
   })  
 
-  .controller('AuthCtrl', function($scope, $location, Auth, Users) {
+  .controller('RegisterCtrl', function($scope, $location, 
+                              Auth, Users, usernames) {
+    $scope.usernames = usernames
     $scope.newUser = {}
 
     $scope.register = function() {
+      if ($scope.RegisterForm.$invalid) return
+      if ($scope.usernames[$scope.newUser.username])
+        return console.log('this username already exists')
+
       Auth.$createUser($scope.newUser)
         .then(function(authData) {
           return Auth.$authWithPassword($scope.newUser)
@@ -104,13 +113,19 @@ angular.module('FlameSlackApp')
           Users.setOnline(authData.uid)
           var profile = Users.getProfile(authData.uid)
 
+          usernames[$scope.newUser.username] = true
           profile.username = $scope.newUser.username
           profile.avatar = authData.password.profileImageURL
           profile.$save()
+          usernames.$save()
           Users.all.$save()
           $location.path('/channels')
         })
     }
+  })
+
+  .controller('LoginCtrl', function($scope, $location, Auth, Users) {
+    $scope.newUser = {}
 
     $scope.login = function() {
       Auth.$authWithPassword($scope.newUser)
@@ -121,4 +136,3 @@ angular.module('FlameSlackApp')
         .catch(console.error)
     }
   })
-

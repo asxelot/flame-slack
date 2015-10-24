@@ -20,12 +20,12 @@
       <li>
         <p>CHANNELS</p>
       </li>
-      <li ng-repeat="ch in channels">
-        <a href="#/channels/{{ch.$value}}" ng-class="{
-          'current': ch.$value == channel, 
-          'active': messages[ch.$value].length && messages[ch.$value][messages[ch.$value].length-1].$id != user.lastReaded[ch.$value]
+      <li ng-repeat="(ch, _val) in channels">
+        <a href="#/channels/{{ch}}" ng-class="{
+          'current': ch == channel, 
+          'active': messages[ch].length && messages[ch][messages[ch].length-1].$id != user.lastReaded[ch]
         }">
-          #{{ch.$value}}
+          #{{ch}}
         </a>
       </li>
       <li ng-show="isAdmin.$value && isNewChannelFormHidden">

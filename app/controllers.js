@@ -23,36 +23,23 @@ angular.module('FlameSlackApp')
     if (!isLogged) 
       return $location.path('/login')
 
-    if (!channels.length)
-      channels.$add('general')
-
-    // if channel exist
-    if (!~channels.map(function(c) {return c.$value}).indexOf($routeParams.channel)) 
-      return $location.path('/channels/' + channels[0].$value)
+    if (!$routeParams.channel || !channels[$routeParams.channel])
+      return $location.path('channels/general')  
 
     $scope.channel = $routeParams.channel
+    $scope.channels = channels
     $scope.isNewChannelFormHidden = true
     $scope.msg = {}
-    $scope.channels = channels
     $rootScope.users = Users.all
     $scope.divider = $scope.user.lastReaded && $scope.user.lastReaded[$scope.channel]
     
     Title.set($scope.channel)
 
-    if (!$scope.messages) {
-      $rootScope.messages = {}
-
-      channels.forEach(function(ch) {
-        var channel = ch.$value
-        $scope.messages[channel] = Messages(channel)
-      })
-    }
-
-    // if new channel created
-    $scope.channels.$watch(function(val) {
-      var channel = $scope.channels.$getRecord(val.key).$value
-      $scope.messages[channel] = Messages(channel)
-    })  
+    // load messages
+    $scope.channels.$ref().on('child_added', function(snap) {
+      if (!$scope.messages) $rootScope.messages = {}
+      $scope.messages[snap.key()] = Messages(snap.key())
+    }) 
 
     // last readed messages
     $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
@@ -72,9 +59,7 @@ angular.module('FlameSlackApp')
     })
 
     $scope.$on('tab-active', function(e, active) {
-      if (active) {
-        Title.remove()
-      }
+      if (active) Title.remove()
     })
 
     $scope.addMessage = function() {
@@ -99,7 +84,8 @@ angular.module('FlameSlackApp')
     $scope.createChannel = function() {
       if ($scope.newChannelForm.$invalid) return
         
-      $scope.channels.$add($scope.newChannelName)
+      $scope.channels[$scope.newChannelName] = true
+      $scope.channels.$save()
       $scope.messages[$scope.newChannelName] = Messages($scope.newChannelName)
       $scope.newChannelName = ''
       $scope.isNewChannelFormHidden = true

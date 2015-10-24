@@ -39,8 +39,8 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .factory('Channels', function($firebaseArray, FB) {
-    return $firebaseArray(new Firebase(FB + 'channels'))
+  .factory('Channels', function($firebaseObject, FB) {
+    return $firebaseObject(new Firebase(FB + 'channels'))
   })
 
   .factory('Messages', function($firebaseArray, FB) {

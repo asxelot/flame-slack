@@ -20,6 +20,7 @@ angular.module('FlameSlackApp')
   .filter('link', function() {
     var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.-]*)*\/?/gi
     var imageRegExp = /\.(jpg|jpeg|png|gif)/
+    var tweetRegExp = /https?:\/\/twitter\.com\/(\w+)\/status\/(\d+)/gi
 
     return function(text) {
       return text.replace(linkRegExp, function(link, protocol) {
@@ -28,6 +29,14 @@ angular.module('FlameSlackApp')
 
         if (imageRegExp.test(link))
           html += '<img src="' + link + '">'
+
+        if (tweetRegExp.test(link)) {
+          html += link.replace(tweetRegExp, function(link) {
+            return '<br><iframe border=0 frameborder=0 height=250 width=550 ' + 
+                   'src="http://twitframe.com/show?' + link + '"></iframe>'
+          })
+        }
+
 
         return html
       })

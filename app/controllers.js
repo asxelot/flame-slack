@@ -91,7 +91,7 @@ angular.module('FlameSlackApp')
       $scope.channels.$save()
       $scope.messages[$scope.newChannelName] = Messages($scope.newChannelName)
       $scope.newChannelName = ''
-      $scope.isNewChannelFormHidden = true
+      $scope.isNewChannelFormShowed = false
     }
   })  
 

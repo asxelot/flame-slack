@@ -48,7 +48,7 @@ angular.module('FlameSlackApp')
   })
 
   .factory('Messages', function($firebaseArray, FB) {
-    var msgRef = new Firebase(FB + 'messages/')
+    var msgRef = new Firebase(FB + 'messages')
 
     return function(channel) {
       return $firebaseArray(msgRef.child(channel))

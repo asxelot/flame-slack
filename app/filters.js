@@ -34,8 +34,8 @@ angular.module('FlameSlackApp')
 
         if (tweetRegExp.test(link)) {
           html += link.replace(tweetRegExp, function(link) {
-            return '<br><iframe border=0 frameborder=0 height=250 width=550 ' + 
-                   'src="http://twitframe.com/show?' + link + '"></iframe>'
+            return '<div><iframe border=0 frameborder=0 height=250 width=550 ' + 
+                   'src="http://twitframe.com/show?' + link + '"></iframe></div>'
           })
         }
 
@@ -45,10 +45,10 @@ angular.module('FlameSlackApp')
                 time = arguments[7]
 
             if (id)
-              return '<br><iframe width="560" height="315" ' +
+              return '<div><iframe width="560" height="315" ' +
                       'src="https://www.youtube.com/embed/' + id + 
                       (time ? '?start=' + time : '') +
-                      '" frameborder="0" allowfullscreen></iframe>'
+                      '" frameborder="0" allowfullscreen></iframe></div>'
             else
               return link
           })

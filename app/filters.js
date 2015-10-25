@@ -18,9 +18,11 @@ angular.module('FlameSlackApp')
   })
 
   .filter('link', function() {
-    var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.-]*)*\/?/gi
+    var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.\-=?]*)*\/?/gi
     var imageRegExp = /\.(jpg|jpeg|png|gif)/
     var tweetRegExp = /https?:\/\/twitter\.com\/(\w+)\/status\/(\d+)/gi
+    var youtubeRegExp = /(https?:\/\/)(www\.)?youtu\.?be(\.com)?\/(watch\?v=)?([\w\-_]+)(\?t=)?(\w+)?/gi
+
 
     return function(text) {
       return text.replace(linkRegExp, function(link, protocol) {
@@ -34,6 +36,21 @@ angular.module('FlameSlackApp')
           html += link.replace(tweetRegExp, function(link) {
             return '<br><iframe border=0 frameborder=0 height=250 width=550 ' + 
                    'src="http://twitframe.com/show?' + link + '"></iframe>'
+          })
+        }
+
+        if (youtubeRegExp.test(link)) {
+          html += link.replace(youtubeRegExp, function(link) {
+            var id = arguments[5],
+                time = arguments[7]
+
+            if (id)
+              return '<br><iframe width="560" height="315" ' +
+                      'src="https://www.youtube.com/embed/' + id + 
+                      (time ? '?start=' + time : '') +
+                      '" frameborder="0" allowfullscreen></iframe>'
+            else
+              return link
           })
         }
 

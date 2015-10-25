@@ -25,7 +25,7 @@ angular.module('FlameSlackApp')
     if (!isLogged) 
       return $location.path('/login')
 
-    if (!$routeParams.channel || !channels[$routeParams.channel])
+    if (!$routeParams.channel || !channels.hasOwnProperty($routeParams.channel))
       return $location.path('channels/general')  
 
     $scope.channel = $routeParams.channel

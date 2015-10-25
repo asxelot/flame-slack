@@ -2,11 +2,16 @@ angular.module('FlameSlackApp')
 
   .directive('ngAutoscroll', function() {
     function link(scope, el) {
-      var isScrolled = false
+      var isScrolled = false,
+          fullscreenchange = 'webkitfullscreenchange mozfullscreenchange fullscreenchange'
 
-      el.on('DOMSubtreeModified', function() {
+      function scrollToBottom() {
         if (isScrolled) el[0].scrollTop = el[0].scrollHeight
-      })
+      }
+
+      el.on('DOMSubtreeModified', scrollToBottom)
+
+      angular.element(document).on(fullscreenchange, scrollToBottom)
 
       el.on('scroll', function() {
         isScrolled = el[0].scrollTop == el[0].scrollHeight - el[0].offsetHeight
@@ -63,7 +68,7 @@ angular.module('FlameSlackApp')
   .directive('uniqueUsername', function() {
     function link(scope, el, attrs, ngModel) {
       ngModel.$validators.uniqueUsername = function(val) {
-        return !scope.usernames[val]
+        return !scope.usernames.hasOwnProperty(val)
       }
     }
 

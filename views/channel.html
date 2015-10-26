@@ -85,8 +85,21 @@
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
           <div class="message-text">
-            <div ng-bind-html="message.text | escape | link | username | trustAsHtml"></div>
+            <div ng-bind-html="message.text | escape | link:this | username | trustAsHtml"></div>
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
+
+            <div class="embed" ng-init="showIframe = false">
+              <div ng-if="youtube" class="embed-youtube" ng-click="showIframe = !showIframe">
+                <div ng-hide="showIframe" class="youtube-preview">
+                  <i class="glyphicon glyphicon-play"></i>
+                  <img ng-src="http://img.youtube.com/vi/{{youtube}}/0.jpg" alt="">
+                </div>
+                <div ng-if="showIframe">
+                  <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+            <!-- /.embed -->
           </div>
         </div>
         <hr ng-if="message.$id == divider" divider>        

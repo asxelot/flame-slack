@@ -1,6 +1,5 @@
 angular.module('FlameSlackApp')
 
-
   .filter('escape', function() {
     var entityMap = {
       "&": "&amp;",
@@ -20,11 +19,9 @@ angular.module('FlameSlackApp')
   .filter('link', function() {
     var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.\-=?]*)*\/?/gi
     var imageRegExp = /\.(jpg|jpeg|png|gif)/
-    var tweetRegExp = /https?:\/\/twitter\.com\/(\w+)\/status\/(\d+)/gi
-    var youtubeRegExp = /(https?:\/\/)(www\.)?youtu\.?be(\.com)?\/(watch\?v=)?([\w\-_]+)(\?t=)?(\w+)?/gi
+    var youtubeRegExp = /(https?:\/\/)(www\.)?youtu\.?be(\.com)?\/(watch\?v=)?([\w\-_]+)(\?t=)?(\w+)?/i
 
-
-    return function(text) {
+    return function(text, ctrl) {
       return text.replace(linkRegExp, function(link, protocol) {
         var html = '<a href="' + (protocol ? '' : 'http://') + 
                     link + '" target="_blank">' + link + '</a>'
@@ -32,28 +29,8 @@ angular.module('FlameSlackApp')
         if (imageRegExp.test(link))
           html += '<img src="' + link + '">'
 
-        if (tweetRegExp.test(link)) {
-          html += link.replace(tweetRegExp, function(link) {
-            return '<div><iframe border=0 frameborder=0 height=250 width=550 ' + 
-                   'src="http://twitframe.com/show?' + link + '"></iframe></div>'
-          })
-        }
-
-        if (youtubeRegExp.test(link)) {
-          html += link.replace(youtubeRegExp, function(link) {
-            var id = arguments[5],
-                time = arguments[7]
-
-            if (id)
-              return '<div><iframe width="560" height="315" ' +
-                      'src="https://www.youtube.com/embed/' + id + 
-                      (time ? '?start=' + time : '') +
-                      '" frameborder="0" allowfullscreen></iframe></div>'
-            else
-              return link
-          })
-        }
-
+        if (youtubeRegExp.test(link)) 
+          ctrl.youtube = link.match(youtubeRegExp)[5]
 
         return html
       })
@@ -82,6 +59,10 @@ angular.module('FlameSlackApp')
 
   .filter('trustAsHtml', function($sce){
     return $sce.trustAsHtml
+  })
+
+  .filter('trustAsResourceUrl', function($sce) {
+    return $sce.trustAsResourceUrl
   })
 
 

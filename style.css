@@ -157,3 +157,21 @@ li a.current {
 .mention {
   background-color: yellow;
 }
+
+.youtube-preview {
+  width: 480px;
+  height: 360px;
+  position: relative;
+}
+.youtube-preview i {
+  position: absolute;
+  width: 100%;
+  color: white;
+  font-size: 60px;
+  line-height: 360px;
+  text-align: center;
+}
+.youtube-preview:hover i {
+  color: red;
+  cursor: pointer;
+}

@@ -86,7 +86,7 @@
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
           <div class="message-text">
-            <div ng-bind-html="message.text | escape | link:this | username | trustAsHtml"></div>
+            <div ng-bind-html="message.text | link:this | username | code | trustAsHtml"></div>
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
 
             <div class="embed">
@@ -106,7 +106,7 @@
                   <img ng-src="{{vimeo.preview}}" alt="">
                 </div>
                 <div ng-if="vimeo.showIframe">
-                  <iframe src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+                  <iframe ng-src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
                 </div>
               </div>
             </div>

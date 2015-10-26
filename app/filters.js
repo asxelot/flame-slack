@@ -1,17 +1,11 @@
 angular.module('FlameSlackApp')
 
-  .filter('escape', function() {
-    var entityMap = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': '&quot;',
-      "'": '&#39;'
-    }
-
-    return function(string) {
-      return String(string).replace(/[&<>"']/g, function(s) {
-        return entityMap[s]
+  .filter('code', function() {
+    return function(text) {
+      return text.replace(/```([^`]+)```/g, function(match, code) {
+        return '<pre>' + code + '</pre>'
+      }).replace(/`([^`]+)`/g, function(match, code) {
+        return '<code>' + code + '</code>'
       })
     }
   })
@@ -23,7 +17,7 @@ angular.module('FlameSlackApp')
     var vimeoRegExp = /https?:\/\/vimeo\.com\/(\d+)/i
 
 
-    return function(text, ctrl) {
+    return function(text, scope) {
       return text.replace(linkRegExp, function(link, protocol) {
         var html = '<a href="' + (protocol ? '' : 'http://') + 
                     link + '" target="_blank">' + link + '</a>'
@@ -31,15 +25,15 @@ angular.module('FlameSlackApp')
         if (imageRegExp.test(link))
           html += '<img src="' + link + '">'
 
-        if (youtubeRegExp.test(link)) 
-          ctrl.youtube = {
+        if (youtubeRegExp.test(link) && !scope.youtube) 
+          scope.youtube = {
             id: link.match(youtubeRegExp)[5]
           }
 
-        if (vimeoRegExp.test(link) && !ctrl.vimeo) {
+        if (vimeoRegExp.test(link) && !scope.vimeo) {
           var vimeoId = link.match(vimeoRegExp)[1]
 
-          ctrl.vimeo = {
+          scope.vimeo = {
             id: vimeoId
           }
 
@@ -47,7 +41,7 @@ angular.module('FlameSlackApp')
             .jsonp('https://vimeo.com/api/v2/video/' + 
                     vimeoId + '.json?callback=JSON_CALLBACK')
             .success(function(data) {
-              ctrl.vimeo.preview = data[0].thumbnail_large
+              scope.vimeo.preview = data[0].thumbnail_large
             })
         }
 

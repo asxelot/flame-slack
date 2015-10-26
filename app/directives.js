@@ -3,6 +3,7 @@ angular.module('FlameSlackApp')
   .directive('ngAutoscroll', function() {
     function link(scope, el) {
       var isScrolled = false,
+          scrolledPosition = 0,
           fullscreenchange = 'webkitfullscreenchange mozfullscreenchange fullscreenchange'
 
       function scrollToBottom() {
@@ -11,7 +12,14 @@ angular.module('FlameSlackApp')
 
       el.on('DOMSubtreeModified', scrollToBottom)
 
-      angular.element(document).on(fullscreenchange, scrollToBottom)
+      angular.element(document).on(fullscreenchange, function(e) {
+        if (e.target != document) {
+          // enable fullscreen
+          scrolledPosition = e.target.parentElement.offsetTop
+        } else {
+          el[0].scrollTop = scrolledPosition
+        }
+      })
 
       el.on('scroll', function() {
         isScrolled = el[0].scrollTop == el[0].scrollHeight - el[0].offsetHeight

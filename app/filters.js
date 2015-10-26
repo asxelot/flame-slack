@@ -22,8 +22,10 @@ angular.module('FlameSlackApp')
         var html = '<a href="' + (protocol ? '' : 'http://') + 
                     link + '" target="_blank">' + link + '</a>'
 
-        if (imageRegExp.test(link))
-          html += '<img src="' + link + '">'
+        if (imageRegExp.test(link) && !scope.image) 
+          scope.image = {
+            src: link
+          }
 
         if (youtubeRegExp.test(link) && !scope.youtube) 
           scope.youtube = {

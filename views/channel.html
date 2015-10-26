@@ -71,7 +71,7 @@
   </div>
   <!-- /.sidebar -->
 
-  <div class="chat" ng-autoscroll>
+  <div class="chat" id="chat" ng-autoscroll>
     <div class="messages">
       <div class="media message" ng-repeat="message in messages[channel]">
         <div class="media-left">
@@ -89,6 +89,11 @@
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
 
             <div class="embed">
+              <div ng-if="image" class="embed-image">
+                <div class="image-preview">
+                  <img ng-src="{{image.src}}" alt="">
+                </div>
+              </div>
               <div ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
                 <div ng-hide="youtube.showIframe" class="youtube-preview">
                   <i class="glyphicon glyphicon-play"></i>

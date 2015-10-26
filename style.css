@@ -25,6 +25,10 @@ body {
   border-color: red;
 }
 
+hr {
+  border-top: 1px solid #9D9D9D;
+}
+
 /*Sidebar*/
 
 .sidebar {
@@ -112,10 +116,6 @@ li a.current {
 .message h5 {
   font-weight: bold;
 }
-.message img {
-  height: 36px;
-  width: 36px;
-}
 .message .media-left a {
   display: block;
   width: 36px;
@@ -129,12 +129,7 @@ li a.current {
 .message-text:hover .glyphicon-remove {
   display: inline-block;
 }
-.message-text img {
-  display: block;
-  width: auto;
-  height: auto;
-  max-height: 400px;
-}
+
 .glyphicon-remove {
   display: none;
   position: absolute;
@@ -146,21 +141,12 @@ li a.current {
   color: #333;
   cursor: pointer;
 }
-
-#msg {
-  position: fixed;
-  width: calc(100% - 250px);
-  bottom: 0;
-  margin-left: 15px;
+.image-preview img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 400px;
 }
-  #msg textarea {
-    height: 34px;
-    resize: none;
-  }
-.mention {
-  background-color: yellow;
-}
-
 .youtube-preview {
   width: 480px;
   height: 360px;
@@ -193,3 +179,18 @@ li a.current {
   opacity: 1;
   cursor: pointer;
 }
+
+#msg {
+  position: fixed;
+  width: calc(100% - 250px);
+  bottom: 0;
+  margin-left: 15px;
+}
+  #msg textarea {
+    height: 34px;
+    resize: none;
+  }
+.mention {
+  background-color: yellow;
+}
+

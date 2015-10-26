@@ -163,15 +163,28 @@ li a.current {
   height: 360px;
   position: relative;
 }
-.youtube-preview i {
+.vimeo-preview {
+  position: relative;
+  width: 640px;
+  height: 360px;
+  background-color: black;
+}
+.vimeo-preview img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.youtube-preview i, .vimeo-preview i {
   position: absolute;
   width: 100%;
   color: white;
   font-size: 60px;
   line-height: 360px;
   text-align: center;
+  z-index: 2;
 }
-.youtube-preview:hover i {
+.youtube-preview:hover i, .vimeo-preview:hover i {
   color: red;
   cursor: pointer;
 }

@@ -16,10 +16,12 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .filter('link', function() {
+  .filter('link', function($http) {
     var linkRegExp = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\/([\/\w\.\-=?]*)*\/?/gi
     var imageRegExp = /\.(jpg|jpeg|png|gif)/
     var youtubeRegExp = /(https?:\/\/)(www\.)?youtu\.?be(\.com)?\/(watch\?v=)?([\w\-_]+)(\?t=)?(\w+)?/i
+    var vimeoRegExp = /https?:\/\/vimeo\.com\/(\d+)/i
+
 
     return function(text, ctrl) {
       return text.replace(linkRegExp, function(link, protocol) {
@@ -30,7 +32,24 @@ angular.module('FlameSlackApp')
           html += '<img src="' + link + '">'
 
         if (youtubeRegExp.test(link)) 
-          ctrl.youtube = link.match(youtubeRegExp)[5]
+          ctrl.youtube = {
+            id: link.match(youtubeRegExp)[5]
+          }
+
+        if (vimeoRegExp.test(link) && !ctrl.vimeo) {
+          var vimeoId = link.match(vimeoRegExp)[1]
+
+          ctrl.vimeo = {
+            id: vimeoId
+          }
+
+          $http
+            .jsonp('https://vimeo.com/api/v2/video/' + 
+                    vimeoId + '.json?callback=JSON_CALLBACK')
+            .success(function(data) {
+              ctrl.vimeo.preview = data[0].thumbnail_large
+            })
+        }
 
         return html
       })

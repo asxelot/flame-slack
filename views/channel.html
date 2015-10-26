@@ -71,6 +71,7 @@
     </ul>
   </div>
   <!-- /.sidebar -->
+
   <div class="chat" ng-autoscroll>
     <div class="messages">
       <div class="media message" ng-repeat="message in messages[channel]">
@@ -88,24 +89,36 @@
             <div ng-bind-html="message.text | escape | link:this | username | trustAsHtml"></div>
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
 
-            <div class="embed" ng-init="showIframe = false">
-              <div ng-if="youtube" class="embed-youtube" ng-click="showIframe = !showIframe">
-                <div ng-hide="showIframe" class="youtube-preview">
+            <div class="embed">
+              <div ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
+                <div ng-hide="youtube.showIframe" class="youtube-preview">
                   <i class="glyphicon glyphicon-play"></i>
-                  <img ng-src="http://img.youtube.com/vi/{{youtube}}/0.jpg" alt="">
+                  <img ng-src="http://img.youtube.com/vi/{{youtube.id}}/0.jpg" alt="">
                 </div>
-                <div ng-if="showIframe">
-                  <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
+                <div ng-if="youtube.showIframe">
+                  <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube.id + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+              </div>
+
+              <div ng-if="vimeo">
+                <div ng-hide="vimeo.showIframe" class="vimeo-preview" ng-click="vimeo.showIframe = true">
+                  <i class="glyphicon glyphicon-play"></i>
+                  <img ng-src="{{vimeo.preview}}" alt="">
+                </div>
+                <div ng-if="vimeo.showIframe">
+                  <iframe src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
                 </div>
               </div>
             </div>
             <!-- /.embed -->
+
           </div>
         </div>
         <hr ng-if="message.$id == divider" divider>        
       </div>
     </div>
     <!-- /.messages -->
+
     <form name="msgForm" id="msg" ng-submit="addMessage()">
       <div class="form-group">
         <input  name="msg" 

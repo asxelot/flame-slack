@@ -37,7 +37,6 @@
         <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
           <div class="form-group">
             <input type="text" 
-                   ng-focus
                    ng-model="newChannelName"
                    ng-show="isAdmin.$value && isNewChannelFormShowed"
                    ng-keydown="isNewChannelFormShowed = $event.keyCode != 27"
@@ -119,15 +118,14 @@
     </div>
     <!-- /.messages -->
 
-    <form name="msgForm" id="msg" ng-submit="addMessage()">
+    <form name="msgForm" id="msg">
       <div class="form-group">
-        <input  name="msg" 
-                ng-model="msg.text" 
-                ng-focus
-                autocomplete="off"
-                class="form-control"></input>
+        <textarea name="msg" 
+                  ng-model="msg.text" 
+                  ng-focus
+                  ng-enter="addMessage()"
+                  class="form-control"></textarea>
       </div>
-      <button type="submit" class="hidden">submit</button>
     </form>
   </div>
 </div>

@@ -84,6 +84,9 @@ li a {
   font-size: 1em;
   border-radius: 0;
 }
+li p {
+  padding-left: 15px;
+}
 li a:hover, li a:focus {
   background-color: #3e313c;
   text-decoration: none;
@@ -183,8 +186,10 @@ li a.current {
   line-height: 360px;
   text-align: center;
   z-index: 2;
+  transition: all 0.5s;
+  opacity: 0.5;
 }
 .youtube-preview:hover i, .vimeo-preview:hover i {
-  color: red;
+  opacity: 1;
   cursor: pointer;
 }

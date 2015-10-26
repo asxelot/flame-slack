@@ -12,11 +12,11 @@ angular.module('FlameSlackApp')
 
       el.on('DOMSubtreeModified', scrollToBottom)
 
+      // chrome fix
       angular.element(document).on(fullscreenchange, function(e) {
         if (e.target != document) {
-          // enable fullscreen
           scrolledPosition = e.target.parentElement.offsetTop
-        } else {
+        } else if (scrolledPosition) {
           el[0].scrollTop = scrolledPosition
         }
       })
@@ -82,6 +82,29 @@ angular.module('FlameSlackApp')
 
     return {
       require: 'ngModel',
+      link: link
+    }
+  })
+
+  .directive('ngEnter', function() {
+    function link(scope, el, attrs) {
+      el.on('input', function() {
+        el.css('height', el[0].scrollHeight + 2 + 'px')
+      })
+
+      el.on('keydown', function(e) {
+        if (e.keyCode == 13 && !e.shiftKey) {
+          scope.ngEnter()
+          el.css('height', '34px')
+          e.preventDefault()
+        }
+      })
+    }
+
+    return {
+      scope: {
+        ngEnter: '&'
+      },
       link: link
     }
   })

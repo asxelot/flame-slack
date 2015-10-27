@@ -91,7 +91,7 @@
             <div class="embed">
               <div ng-if="image" class="embed-image">
                 <div class="image-preview">
-                  <img ng-src="{{image.src}}" alt="">
+                  <img ng-src="{{image.src}}" alt="" ng-click="lightbox(image.src)">
                 </div>
               </div>
               <div ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">

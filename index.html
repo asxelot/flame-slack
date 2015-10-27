@@ -21,5 +21,11 @@
 </head>
 <body ng-controller="MainCtrl">
   <div ng-view></div>
+
+  <div id="lightbox" ng-if="lightboxSrc">
+    <div id="lightbox-wrap" ng-click="lightbox(null)">
+      <img ng-src="{{lightboxSrc}}" alt="">
+    </div>
+  </div>
 </body>
 </html>

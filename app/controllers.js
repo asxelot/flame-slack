@@ -2,6 +2,10 @@ angular.module('FlameSlackApp')
 
   .controller('MainCtrl', function($scope, $rootScope, $location, 
                           Auth, Users, Usernames) {
+    $scope.lightbox = function(src) {
+      $scope.lightboxSrc = src
+    }
+
     Auth.$onAuth(function(authData) {
       if (authData) {
         $rootScope.user = Users.getProfile(authData.uid)

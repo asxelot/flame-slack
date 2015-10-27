@@ -2,11 +2,14 @@ angular.module('FlameSlackApp')
 
   .filter('code', function() {
     return function(text) {
-      return text.replace(/```([^`]+)```/g, function(match, code) {
-        return '<pre>' + code + '</pre>'
-      }).replace(/`([^`]+)`/g, function(match, code) {
-        return '<code>' + code + '</code>'
-      })
+      return text.replace(/```([^`]+)```/g, '<pre>$1</pre>')
+                 .replace(/`([^`]+)`/g, '<code>$1</code>')
+    }
+  })
+
+  .filter('quote', function() {
+    return function(text) {
+      return text.replace(/^>([^\n]+)$/gm, '<blockquote>$1</blockquote>')
     }
   })
 

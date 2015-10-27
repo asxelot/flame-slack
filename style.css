@@ -29,6 +29,12 @@ hr {
   border-top: 1px solid #9D9D9D;
 }
 
+blockquote {
+  margin: 0;
+  font-size: 1em;
+  padding: 2px 10px;
+}
+
 /*Sidebar*/
 
 .sidebar {
@@ -125,6 +131,9 @@ li a.current {
 }
 .message-text {
   position: relative;
+}
+.message-text .ng-binding {
+  white-space: pre;
 }
 .message-text:hover .glyphicon-remove {
   display: inline-block;

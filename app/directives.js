@@ -48,7 +48,7 @@ angular.module('FlameSlackApp')
   .directive('divider', function() {
     function link(scope, el) {
       angular.element(document.getElementById('chat'))
-        .on('DOMSubtreeModified', function() {
+        .one('DOMSubtreeModified', function() {
           scope.$emit('dividerTop', el[0].offsetTop - 150)
         })
     }

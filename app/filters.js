@@ -9,7 +9,7 @@ angular.module('FlameSlackApp')
 
   .filter('quote', function() {
     return function(text) {
-      return text.replace(/^>([^\n]+)$/gm, '<blockquote>$1</blockquote>')
+      return text.replace(/^>([^\n]+)$\n/gm, '<blockquote>$1</blockquote>')
     }
   })
 
@@ -71,6 +71,17 @@ angular.module('FlameSlackApp')
         } else {
           return match
         }
+      })
+    }
+  })
+
+  .filter('channel', function($rootScope) {
+    return function(text) {
+      return text.replace(/#(\w+)/gi, function(match, channel) {
+        if ($rootScope.channels.hasOwnProperty(channel))
+          return '<a href="#/channels/' + channel + '">' + match + '</a>'
+        else
+          return match
       })
     }
   })

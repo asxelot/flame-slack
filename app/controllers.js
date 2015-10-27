@@ -29,7 +29,7 @@ angular.module('FlameSlackApp')
       return $location.path('channels/general')  
 
     $scope.channel = $routeParams.channel
-    $scope.channels = channels
+    $rootScope.channels = channels
     $scope.msg = {}
     $rootScope.users = Users.all
     $scope.divider = $scope.user.lastReaded && 

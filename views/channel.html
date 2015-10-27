@@ -85,7 +85,7 @@
             <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
           </h5>
           <div class="message-text">
-            <div ng-bind-html="message.text | quote | link:this | username | code | trustAsHtml"></div>
+            <div ng-bind-html="message.text | quote | link:this | username | channel | code | trustAsHtml"></div>
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
 
             <div class="embed">

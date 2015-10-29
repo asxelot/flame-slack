@@ -35,6 +35,10 @@ blockquote {
   padding: 2px 10px;
 }
 
+form[name="RegisterForm"], form[name="LoginForm"] {
+  margin-top: 50px;
+}
+
 /*Sidebar*/
 
 .sidebar {

@@ -138,9 +138,11 @@ angular.module('FlameSlackApp')
   })
 
   .controller('RegisterCtrl', function($scope, $location, 
-                              Auth, Users, usernames) {
+                              Auth, Users, usernames, isLogged) {
     $scope.usernames = usernames
     $scope.newUser = {}
+    
+    if (isLogged) return $location.path('/channels')
 
     $scope.register = function() {
       if ($scope.RegisterForm.$invalid) return
@@ -155,19 +157,21 @@ angular.module('FlameSlackApp')
           Users.setOnline(authData.uid)
           var profile = Users.getProfile(authData.uid)
 
-          usernames[$scope.newUser.username] = authData.uid
+          $scope.usernames[$scope.newUser.username] = authData.uid
+          $scope.usernames.$save()
           profile.username = $scope.newUser.username
           profile.avatar = authData.password.profileImageURL
           profile.$save()
-          usernames.$save()
           Users.all.$save()
           $location.path('/channels')
         })
     }
   })
 
-  .controller('LoginCtrl', function($scope, $location, Auth, Users) {
+  .controller('LoginCtrl', function($scope, $location, Auth, Users, isLogged) {
     $scope.newUser = {}
+
+    if (isLogged) return $location.path('/channels')
 
     $scope.login = function() {
       Auth.$authWithPassword($scope.newUser)

@@ -11,7 +11,12 @@ angular.module('FlameSlackApp', [
     $routeProvider
       .when('/login', {
         controller: 'LoginCtrl',
-        templateUrl: 'views/login.html'
+        templateUrl: 'views/login.html',
+        resolve: {
+          isLogged: function(Auth) {
+            return Auth.$requireAuth()
+          }
+        }
       })
       .when('/register', {
         controller: 'RegisterCtrl',
@@ -19,6 +24,9 @@ angular.module('FlameSlackApp', [
         resolve: {
           usernames: function(Usernames) {
             return Usernames.$loaded()
+          },
+          isLogged: function(Auth) {
+            return Auth.$requireAuth()
           }
         }
       })

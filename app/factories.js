@@ -19,8 +19,8 @@ angular.module('FlameSlackApp')
 
         connected.$watch(function() {
           if (connected.$value === true) {
-            online.$add(true).then(function(connectedRef) {
-              connectedRef.onDisconnect().remove()
+            online.$add(true).then(function() {
+              online.$ref().onDisconnect().remove()
             })
           }
         })
@@ -52,6 +52,27 @@ angular.module('FlameSlackApp')
 
     return function(channel) {
       return $firebaseArray(msgRef.child(channel))
+    }
+  })
+
+  .factory('Direct', function($firebaseArray, $firebaseObject, FB) {
+    return {
+      messages: function(uid1, uid2) {
+        var path = uid1 < uid2 ? uid1 + '/' + uid2 : uid2 + '/' + uid1
+        return $firebaseArray(new Firebase(FB).child('direct').child(path))
+      },
+      addNotify: function(from, to) {
+        var ref = new Firebase(FB + 'directNotification').child(to).child(from)
+        ref.transaction(function(val) {
+          return val ? val + 1 : 1
+        })
+      },
+      getNotify: function(uid) {
+        return $firebaseObject(new Firebase(FB + 'directNotification').child(uid))
+      },
+      removeNotify: function(from, to) {
+        new Firebase(FB + 'directNotification').child(from).child(to).remove()
+      }
     }
   })
 

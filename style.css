@@ -72,6 +72,9 @@ i.circle {
 i.circle.online {
   background-color: #ab9ba9;
 }
+.badge {
+  float: right;
+}
 
 .form-group {
   position: relative;

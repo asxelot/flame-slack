@@ -1,32 +1,33 @@
 angular.module('FlameSlackApp')
 
   .directive('ngAutoscroll', function() {
-    function link(scope, el) {
-      var isScrolled = false,
+    function link($scope, $el) {
+      var el = $el[0],
+          isScrolled = true,
           scrolledPosition = 0,
           fullscreenchange = 'webkitfullscreenchange mozfullscreenchange fullscreenchange'
 
       function scrollToBottom() {
-        if (isScrolled) el[0].scrollTop = el[0].scrollHeight
+        if (isScrolled) el.scrollTop = el.scrollHeight
       }
 
-      el.on('DOMSubtreeModified', scrollToBottom)
+      $el.on('DOMSubtreeModified', scrollToBottom)
 
-      // chrome fix
+      // chrome scroll fix
       angular.element(document).on(fullscreenchange, function(e) {
         if (e.target != document) {
           scrolledPosition = e.target.parentElement.offsetTop
         } else if (scrolledPosition) {
-          el[0].scrollTop = scrolledPosition
+          el.scrollTop = scrolledPosition
         }
       })
 
-      el.on('scroll', function() {
-        isScrolled = el[0].scrollTop == el[0].scrollHeight - el[0].offsetHeight
+      $el.on('scroll', function() {
+        isScrolled = el.scrollTop == el.scrollHeight - el.offsetHeight
       })
 
-      scope.$on('dividerTop', function(e, top) {
-        el[0].scrollTop = top
+      $scope.$on('dividerTop', function(e, top) {
+        el.scrollTop = top
       })
     }
 
@@ -36,8 +37,8 @@ angular.module('FlameSlackApp')
   })
 
   .directive('ngFocus', function() {
-    function link(scope, el, attrs) {
-      el[0].focus()
+    function link($scope, $el) {
+      $el[0].focus()
     }
 
     return {
@@ -46,10 +47,10 @@ angular.module('FlameSlackApp')
   })
 
   .directive('divider', function() {
-    function link(scope, el) {
+    function link($scope, $el) {
       angular.element(document.getElementById('chat'))
         .one('DOMSubtreeModified', function() {
-          scope.$emit('dividerTop', el[0].offsetTop - 150)
+          $scope.$emit('dividerTop', $el[0].offsetTop - 150)
         })
     }
 
@@ -77,9 +78,9 @@ angular.module('FlameSlackApp')
   })
 
   .directive('uniqueUsername', function() {
-    function link(scope, el, attrs, ngModel) {
+    function link($scope, $el, $attrs, ngModel) {
       ngModel.$validators.uniqueUsername = function(val) {
-        return !scope.usernames.hasOwnProperty(val)
+        return !$scope.usernames.hasOwnProperty(val)
       }
     }
 
@@ -90,15 +91,15 @@ angular.module('FlameSlackApp')
   })
 
   .directive('ngEnter', function() {
-    function link(scope, el, attrs) {
-      el.on('input', function() {
-        el.css('height', el[0].scrollHeight + 2 + 'px')
+    function link($scope, $el) {
+      $el.on('input', function() {
+        $el.css('height', $el[0].scrollHeight + 2 + 'px')
       })
 
-      el.on('keydown', function(e) {
+      $el.on('keydown', function(e) {
         if (e.keyCode == 13 && !e.shiftKey) {
-          scope.ngEnter()
-          el.css('height', '34px')
+          $scope.ngEnter()
+          $el.css('height', '34px')
           e.preventDefault()
         }
       })

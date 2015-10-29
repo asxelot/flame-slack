@@ -34,6 +34,18 @@ angular.module('FlameSlackApp', [
           }
         }
       })
+      .when('/messages/:user', {
+        controller: 'DirectCtrl',
+        templateUrl: 'views/channel.html',
+        resolve: {
+          usernames: function(Usernames) {
+            return Usernames.$loaded()
+          },
+          isLogged: function(Auth) {
+            return Auth.$requireAuth()
+          }
+        }
+      })
       .when('/404', {
         templateUrl: 'views/404.html'
       })

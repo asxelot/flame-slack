@@ -61,10 +61,18 @@
       <li>
         <p>USERS</p>
       </li>
-      <li ng-repeat="user in users">
-        <a href class="user">
-          <i class="circle" ng-class="user.online ? 'online' : 'offline'"></i>
-          {{user.username}}    
+      <li ng-repeat="u in users">
+        <a href="#/messages/{{u.username}}" 
+           class="user" 
+           ng-if="u.$id != user.$id" 
+           ng-class="{
+            'current': u.username == directWith.username
+        }">
+          <i class="circle" ng-class="u.online ? 'online' : 'offline'"></i>
+          {{u.username}}    
+          <span ng-if="directNotify[u.$id]" class="badge">
+            {{directNotify[u.$id]}}
+          </span>
         </a>
       </li>
     </ul>
@@ -73,7 +81,7 @@
 
   <div class="chat" id="chat" ng-autoscroll>
     <div class="messages">
-      <div class="media message" ng-repeat="message in messages[channel]">
+      <div class="media message" ng-repeat="message in messages[channel] || messages | orderBy: 'timestamp'">
         <div class="media-left">
           <a href>
             <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[channel][$index-1].author.id">

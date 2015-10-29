@@ -32,10 +32,11 @@ angular.module('FlameSlackApp')
     if (!$routeParams.channel || !channels.hasOwnProperty($routeParams.channel))
       return $location.path('channels/general')  
 
+    if (!$scope.channels) $rootScope.channels = channels
+    if (!$scope.users) $rootScope.users = Users.all
+
     $scope.channel = $routeParams.channel
-    $rootScope.channels = channels
     $scope.msg = {}
-    $rootScope.users = Users.all
     $scope.divider = $scope.user.lastReaded && 
                      $scope.user.lastReaded[$scope.channel]
     
@@ -99,6 +100,43 @@ angular.module('FlameSlackApp')
     }
   })  
 
+  .controller('DirectCtrl', function($scope, $rootScope, $routeParams, $location,
+                            usernames, isLogged, Channels, Users, Direct, FB) {
+    if (!isLogged) 
+      return $location.path('/login')
+
+    if (!usernames.hasOwnProperty($routeParams.user))
+      console.log('user not found')
+
+    if (!$scope.users) $rootScope.users = Users.all
+    if (!$scope.channels) $rootScope.channels = Channels
+    if (!$scope.directNotify) $rootScope.directNotify = Direct.getNotify($scope.user.$id)
+
+    $scope.msg = {}
+    $scope.directWith = {
+      $id: usernames[$routeParams.user],
+      username: $routeParams.user
+    }
+    $scope.messages = Direct.messages($scope.user.$id, $scope.directWith.$id)
+
+    Direct.removeNotify($scope.user.$id, $scope.directWith.$id)
+
+    $scope.addMessage = function() {
+      if (!$scope.msg.text) return 
+
+      $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
+      $scope.msg.author = {
+        id: $scope.user.$id,
+        username: $scope.user.username,
+        avatar: $scope.user.avatar
+      }
+
+      $scope.messages.$add($scope.msg)
+      Direct.addNotify($scope.user.$id, $scope.directWith.$id)
+      $scope.msg = {}
+    }
+  })
+
   .controller('RegisterCtrl', function($scope, $location, 
                               Auth, Users, usernames) {
     $scope.usernames = usernames
@@ -117,7 +155,7 @@ angular.module('FlameSlackApp')
           Users.setOnline(authData.uid)
           var profile = Users.getProfile(authData.uid)
 
-          usernames[$scope.newUser.username] = true
+          usernames[$scope.newUser.username] = authData.uid
           profile.username = $scope.newUser.username
           profile.avatar = authData.password.profileImageURL
           profile.$save()

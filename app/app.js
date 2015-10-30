@@ -1,9 +1,9 @@
 angular.module('FlameSlackApp', [
-  'ngRoute', 
-  'firebase', 
-  'ui.bootstrap',
-  'ngSanitize'
-])
+    'ngRoute', 
+    'firebase', 
+    'ui.bootstrap',
+    'ngSanitize'
+  ]) 
 
   .constant('FB', 'https://flame-slack.firebaseio.com/')
 
@@ -14,7 +14,7 @@ angular.module('FlameSlackApp', [
         templateUrl: 'views/login.html',
         resolve: {
           isLogged: function(Auth) {
-            return Auth.$requireAuth()
+            return Auth.$waitForAuth()
           }
         }
       })
@@ -26,35 +26,32 @@ angular.module('FlameSlackApp', [
             return Usernames.$loaded()
           },
           isLogged: function(Auth) {
-            return Auth.$requireAuth()
+            return Auth.$waitForAuth()
           }
         }
       })
       .when('/channels/:channel?', {
         controller: 'ChannelCtrl',
-        templateUrl: 'views/channel.html',
+        templateUrl: 'views/chat.html',
         resolve: {
           channels: function(Channels) {
             return Channels.$loaded()
           },
           isLogged: function(Auth) {
-            return Auth.$requireAuth()
+            return Auth.$waitForAuth()
           }
         }
       })
       .when('/messages/:user', {
         controller: 'DirectCtrl',
-        templateUrl: 'views/channel.html',
+        templateUrl: 'views/chat.html',
         resolve: {
           usernames: function(Usernames) {
             return Usernames.$loaded()
           },
           isLogged: function(Auth) {
-            return Auth.$requireAuth()
+            return Auth.$waitForAuth()
           }
         }
-      })
-      .when('/404', {
-        templateUrl: 'views/404.html'
       })
   })

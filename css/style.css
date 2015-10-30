@@ -65,6 +65,9 @@ form[name="RegisterForm"], form[name="LoginForm"] {
   .sidebar .form-control {
     width: 100%;
   }
+  .sidebar .logged-user {
+    padding: 1em;
+  }
 
 i.circle {
   display: inline-block;
@@ -76,10 +79,6 @@ i.circle {
 i.circle.online {
   background-color: #ab9ba9;
 }
-.badge {
-  float: right;
-}
-
 .form-group {
   position: relative;
 }

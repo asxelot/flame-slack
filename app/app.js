@@ -1,7 +1,6 @@
 angular.module('FlameSlackApp', [
     'ngRoute', 
     'firebase', 
-    'ui.bootstrap',
     'ngSanitize'
   ]) 
 

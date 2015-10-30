@@ -1,21 +1,12 @@
 <div class="full-screen">
   <div class="sidebar">
-    <ul>
-      <li>
-        <span uib-dropdown>
-          <a href uib-dropdown-toggle>
-            <i class="circle" ng-class="user.online ? 'online' : 'offline'"></i>
-            {{user.username}} 
-            <span class="caret"></span></i>
-          </a>
-          <ul class="uib-dropdown-menu">
-            <li>
-              <a href ng-click="logout()">log out</a>
-            </li>
-          </ul>
-        </span>
-      </li>
-    </ul>
+    <div class="logged-user">
+      <a href>
+        <i class="circle" ng-class="user.online ? 'online' : 'offline'"></i>
+        {{user.username}} 
+      </a>
+      <a href ng-click="logout()" class="pull-right">log out</a>
+    </div>
     <ul>
       <li>
         <p>CHANNELS</p>
@@ -70,7 +61,7 @@
         }">
           <i class="circle" ng-class="u.online ? 'online' : 'offline'"></i>
           {{u.username}}    
-          <span ng-if="directNotify[u.$id]" class="badge">
+          <span ng-if="directNotify[u.$id]" class="badge pull-right">
             {{directNotify[u.$id]}}
           </span>
         </a>

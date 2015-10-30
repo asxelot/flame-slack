@@ -1,5 +1,21 @@
 angular.module('FlameSlackApp')
 
+  .filter('escape', function() {
+    var entityMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': '&quot;',
+      "'": '&#39;'
+    }
+
+    return function(text) {
+      return (text||'').replace(/[&<>"']/g, function(s) {
+        return entityMap[s]
+      })
+    }
+  })
+
   .filter('code', function() {
     return function(text) {
       return (text||'').replace(/```([^`]+)```/g, '<pre>$1</pre>')

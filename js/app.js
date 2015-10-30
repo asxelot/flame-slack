@@ -236,7 +236,7 @@ angular.module('FlameSlackApp')
       notify: function(from, to) {
         var ref = new Firebase(FB + 'directNotification').child(to).child(from)
         ref.transaction(function(val) {
-          return val ? val + 1 : 1
+          return (val || 0) + 1
         })
       },
       notifications: function(uid) {
@@ -268,6 +268,22 @@ angular.module('FlameSlackApp')
     return Title
   })
 angular.module('FlameSlackApp')
+
+  .filter('escape', function() {
+    var entityMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': '&quot;',
+      "'": '&#39;'
+    }
+
+    return function(text) {
+      return (text||'').replace(/[&<>"']/g, function(s) {
+        return entityMap[s]
+      })
+    }
+  })
 
   .filter('code', function() {
     return function(text) {

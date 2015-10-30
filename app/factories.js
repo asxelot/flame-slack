@@ -64,7 +64,7 @@ angular.module('FlameSlackApp')
       notify: function(from, to) {
         var ref = new Firebase(FB + 'directNotification').child(to).child(from)
         ref.transaction(function(val) {
-          return val ? val + 1 : 1
+          return (val || 0) + 1
         })
       },
       notifications: function(uid) {

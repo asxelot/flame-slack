@@ -4,7 +4,7 @@ angular.module('FlameSlackApp')
     return $firebaseAuth(new Firebase(FB))
   })
 
-  .factory('Users', function($q, $firebaseArray, $firebaseObject, FB) {
+  .factory('Users', function($firebaseArray, $firebaseObject, FB) {
     var usersRef = new Firebase(FB + 'users'),
         connectedRef = new Firebase(FB + '.info/connected'),
         users = $firebaseArray(usersRef)
@@ -61,17 +61,17 @@ angular.module('FlameSlackApp')
         var path = uid1 < uid2 ? uid1 + '/' + uid2 : uid2 + '/' + uid1
         return $firebaseArray(new Firebase(FB).child('direct').child(path))
       },
-      addNotify: function(from, to) {
+      notify: function(from, to) {
         var ref = new Firebase(FB + 'directNotification').child(to).child(from)
         ref.transaction(function(val) {
           return val ? val + 1 : 1
         })
       },
-      getNotify: function(uid) {
+      notifications: function(uid) {
         return $firebaseObject(new Firebase(FB + 'directNotification').child(uid))
       },
-      removeNotify: function(from, to) {
-        new Firebase(FB + 'directNotification').child(from).child(to).remove()
+      removeNotifications: function(to, from) {
+        new Firebase(FB + 'directNotification').child(to).child(from).remove()
       }
     }
   })

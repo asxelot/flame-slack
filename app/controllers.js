@@ -2,9 +2,6 @@ angular.module('FlameSlackApp')
 
   .controller('MainCtrl', function($scope, $rootScope, $location, 
                           Auth, Users, Usernames) {
-    $scope.lightbox = function(src) {
-      $scope.lightboxSrc = src
-    }
 
     Auth.$onAuth(function(authData) {
       if (authData) {
@@ -16,6 +13,10 @@ angular.module('FlameSlackApp')
         $location.path('/login')
       }
     })  
+    
+    $scope.lightbox = function(src) {
+      $scope.lightboxSrc = src
+    }
 
     $scope.logout = function() {
       Users.setOffline($scope.user.$id)
@@ -110,7 +111,8 @@ angular.module('FlameSlackApp')
 
     if (!$scope.users) $rootScope.users = Users.all
     if (!$scope.channels) $rootScope.channels = Channels
-    if (!$scope.directNotify) $rootScope.directNotify = Direct.getNotify($scope.user.$id)
+    if (!$scope.directNotify) 
+      $rootScope.directNotify = Direct.notifications($scope.user.$id)
 
     $scope.msg = {}
     $scope.directWith = {
@@ -119,7 +121,7 @@ angular.module('FlameSlackApp')
     }
     $scope.messages = Direct.messages($scope.user.$id, $scope.directWith.$id)
 
-    Direct.removeNotify($scope.user.$id, $scope.directWith.$id)
+    Direct.removeNotifications($scope.user.$id, $scope.directWith.$id)
 
     $scope.addMessage = function() {
       if (!$scope.msg.text) return 
@@ -132,7 +134,7 @@ angular.module('FlameSlackApp')
       }
 
       $scope.messages.$add($scope.msg)
-      Direct.addNotify($scope.user.$id, $scope.directWith.$id)
+      Direct.notify($scope.user.$id, $scope.directWith.$id)
       $scope.msg = {}
     }
   })

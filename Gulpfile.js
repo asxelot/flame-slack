@@ -3,6 +3,7 @@ var gulp       = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify     = require('gulp-uglify'),
     concat     = require('gulp-concat'),
+    rename     = require('gulp-rename'),
     livereload = require('gulp-livereload')
 
 var src = {

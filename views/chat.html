@@ -77,6 +77,7 @@
           <a href>
             <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[channel][$index-1].author.id">
           </a>
+          <span ng-show="message.author.id == messages[channel][$index-1].author.id" class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
         </div>
         <div class="media-body">
           <h5 class="media-heading" ng-hide="message.author.id == messages[channel][$index-1].author.id">
@@ -88,12 +89,12 @@
             <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
 
             <div class="embed">
-              <div ng-if="image" class="embed-image">
+              <blockquote ng-if="image" class="embed-image">
                 <div class="image-preview">
                   <img ng-src="{{image.src}}" alt="" ng-click="lightbox(image.src)">
                 </div>
-              </div>
-              <div ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
+              </blockquote>
+              <blockquote ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
                 <div ng-hide="youtube.showIframe" class="youtube-preview">
                   <i class="glyphicon glyphicon-play"></i>
                   <img ng-src="http://img.youtube.com/vi/{{youtube.id}}/0.jpg" alt="">
@@ -101,9 +102,9 @@
                 <div ng-if="youtube.showIframe">
                   <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube.id + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
                 </div>
-              </div>
+              </blockquote>
 
-              <div ng-if="vimeo">
+              <blockquote ng-if="vimeo">
                 <div ng-hide="vimeo.showIframe" class="vimeo-preview" ng-click="vimeo.showIframe = true">
                   <i class="glyphicon glyphicon-play"></i>
                   <img ng-src="{{vimeo.preview}}" alt="">
@@ -111,7 +112,7 @@
                 <div ng-if="vimeo.showIframe">
                   <iframe ng-src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
                 </div>
-              </div>
+              </blockquote>
             </div>
             <!-- /.embed -->
 

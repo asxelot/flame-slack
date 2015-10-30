@@ -22,5 +22,9 @@ function MainCtrl($scope, $rootScope, $location, Auth, Users, Usernames) {
   $scope.logout = function() {
     Users.setOffline($scope.user.$id)
     Auth.$unauth()
-  }      
+  }     
+
+  $scope.$on('$routeChangeSuccess', function() {
+    $rootScope.isLoadingHidden = true
+  }) 
 }

@@ -2,7 +2,8 @@ angular.module('FlameSlackApp')
   .controller('RegisterCtrl', RegisterCtrl)
 
 
-function RegisterCtrl($scope, $location, Auth, Users, usernames, isLogged) {
+function RegisterCtrl($scope, $rootScope, $location, Auth, Users, 
+                      usernames, isLogged) {
   $scope.usernames = usernames
   $scope.newUser = {}
   
@@ -12,6 +13,8 @@ function RegisterCtrl($scope, $location, Auth, Users, usernames, isLogged) {
     if ($scope.RegisterForm.$invalid) return
     if ($scope.usernames[$scope.newUser.username])
       return console.log('this username already exists')
+
+    $rootScope.isLoadingHidden = false
 
     Auth.$createUser($scope.newUser)
       .then(function(authData) {

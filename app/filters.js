@@ -2,14 +2,14 @@ angular.module('FlameSlackApp')
 
   .filter('code', function() {
     return function(text) {
-      return text.replace(/```([^`]+)```/g, '<pre>$1</pre>')
-                 .replace(/`([^`]+)`/g, '<code>$1</code>')
+      return (text||'').replace(/```([^`]+)```/g, '<pre>$1</pre>')
+                       .replace(/`([^`]+)`/g, '<code>$1</code>')
     }
   })
 
   .filter('quote', function() {
     return function(text) {
-      return text.replace(/^>([^\n]+)$\n?/gm, '<blockquote>$1</blockquote>')
+      return (text||'').replace(/^>([^\n]+)$\n?/gm, '<blockquote>$1</blockquote>')
     }
   })
 
@@ -21,26 +21,19 @@ angular.module('FlameSlackApp')
 
 
     return function(text, scope) {
-      return text.replace(linkRegExp, function(link, protocol) {
+      return (text||'').replace(linkRegExp, function(link, protocol) {
         var html = '<a href="' + (protocol ? '' : 'http://') + 
                     link + '" target="_blank">' + link + '</a>'
 
         if (imageRegExp.test(link) && !scope.image) 
-          scope.image = {
-            src: link
-          }
+          scope.image = { src: link }
 
         if (youtubeRegExp.test(link) && !scope.youtube) 
-          scope.youtube = {
-            id: link.match(youtubeRegExp)[5]
-          }
+          scope.youtube = { id: link.match(youtubeRegExp)[5] }
 
         if (vimeoRegExp.test(link) && !scope.vimeo) {
           var vimeoId = link.match(vimeoRegExp)[1]
-
-          scope.vimeo = {
-            id: vimeoId
-          }
+          scope.vimeo = { id: vimeoId }
 
           $http
             .jsonp('https://vimeo.com/api/v2/video/' + 
@@ -59,7 +52,7 @@ angular.module('FlameSlackApp')
     return function(text) {
       var users = $rootScope.users.map(function(user) {return user.username})
 
-      return text.replace(/@(\w+)/, function(match, username) {
+      return (text||'').replace(/@(\w+)/, function(match, username) {
         var currentUser = $rootScope.user.username == username
 
         if (~users.indexOf(username)) {
@@ -77,7 +70,7 @@ angular.module('FlameSlackApp')
 
   .filter('channel', function($rootScope) {
     return function(text) {
-      return text.replace(/#(\w+)/gi, function(match, channel) {
+      return (text||'').replace(/#(\w+)/gi, function(match, channel) {
         if ($rootScope.channels.hasOwnProperty(channel))
           return '<a href="#/channels/' + channel + '">' + match + '</a>'
         else

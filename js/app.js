@@ -1,61 +1,61 @@
 angular.module('FlameSlackApp', [
     'ngRoute', 
     'firebase', 
-    'ui.bootstrap',
-    'ngSanitize'
-  ]) 
+    'ngSanitize'  
+  ])  
 
   .constant('FB', 'https://flame-slack.firebaseio.com/')
 
-  .config(function($routeProvider) {
-    $routeProvider
-      .when('/login', {
-        controller: 'LoginCtrl',
-        templateUrl: 'views/login.html',
-        resolve: {
-          isLogged: function(Auth) {
-            return Auth.$waitForAuth()
-          }
-        }
-      })
-      .when('/register', {
-        controller: 'RegisterCtrl',
-        templateUrl: 'views/register.html',
-        resolve: {
-          usernames: function(Usernames) {
-            return Usernames.$loaded()
-          },
-          isLogged: function(Auth) {
-            return Auth.$waitForAuth()
-          }
-        }
-      })
-      .when('/channels/:channel?', {
-        controller: 'ChannelCtrl',
-        templateUrl: 'views/chat.html',
-        resolve: {
-          channels: function(Channels) {
-            return Channels.$loaded()
-          },
-          isLogged: function(Auth) {
-            return Auth.$waitForAuth()
-          }
-        }
-      })
-      .when('/messages/:user', {
-        controller: 'DirectCtrl',
-        templateUrl: 'views/chat.html',
-        resolve: {
-          usernames: function(Usernames) {
-            return Usernames.$loaded()
-          },
-          isLogged: function(Auth) {
-            return Auth.$waitForAuth()
-          }
-        }
-      })
-  })
+  .config(router)
 
+function router($routeProvider) {
+  $routeProvider
+    .when('/login', {
+      controller: 'LoginCtrl',
+      templateUrl: 'views/login.html',
+      resolve: {
+        isLogged: function(Auth) {
+          return Auth.$waitForAuth()
+        }
+      }
+    })
+    .when('/register', {
+      controller: 'RegisterCtrl',
+      templateUrl: 'views/register.html',
+      resolve: {
+        usernames: function(Usernames) {
+          return Usernames.$loaded()
+        },
+        isLogged: function(Auth) {
+          return Auth.$waitForAuth()
+        }
+      }
+    })
+    .when('/channels/:channel?', {
+      controller: 'ChannelCtrl',
+      templateUrl: 'views/chat.html',
+      resolve: {
+        channels: function(Channels) {
+          return Channels.$loaded()
+        },
+        isLogged: function(Auth) {
+          return Auth.$waitForAuth()
+        }
+      }
+    })
+    .when('/messages/:user', {
+      controller: 'DirectCtrl',
+      templateUrl: 'views/chat.html',
+      resolve: {
+        usernames: function(Usernames) {
+          return Usernames.$loaded()
+        },
+        isLogged: function(Auth) {
+          return Auth.$waitForAuth()
+        }
+      }
+    })
+}
 angular.module('FlameSlackApp')
 
   .directive('ngAutoscroll', function() {
@@ -271,14 +271,14 @@ angular.module('FlameSlackApp')
 
   .filter('code', function() {
     return function(text) {
-      return text.replace(/```([^`]+)```/g, '<pre>$1</pre>')
-                 .replace(/`([^`]+)`/g, '<code>$1</code>')
+      return (text||'').replace(/```([^`]+)```/g, '<pre>$1</pre>')
+                       .replace(/`([^`]+)`/g, '<code>$1</code>')
     }
   })
 
   .filter('quote', function() {
     return function(text) {
-      return text.replace(/^>([^\n]+)$\n?/gm, '<blockquote>$1</blockquote>')
+      return (text||'').replace(/^>([^\n]+)$\n?/gm, '<blockquote>$1</blockquote>')
     }
   })
 
@@ -290,26 +290,19 @@ angular.module('FlameSlackApp')
 
 
     return function(text, scope) {
-      return text.replace(linkRegExp, function(link, protocol) {
+      return (text||'').replace(linkRegExp, function(link, protocol) {
         var html = '<a href="' + (protocol ? '' : 'http://') + 
                     link + '" target="_blank">' + link + '</a>'
 
         if (imageRegExp.test(link) && !scope.image) 
-          scope.image = {
-            src: link
-          }
+          scope.image = { src: link }
 
         if (youtubeRegExp.test(link) && !scope.youtube) 
-          scope.youtube = {
-            id: link.match(youtubeRegExp)[5]
-          }
+          scope.youtube = { id: link.match(youtubeRegExp)[5] }
 
         if (vimeoRegExp.test(link) && !scope.vimeo) {
           var vimeoId = link.match(vimeoRegExp)[1]
-
-          scope.vimeo = {
-            id: vimeoId
-          }
+          scope.vimeo = { id: vimeoId }
 
           $http
             .jsonp('https://vimeo.com/api/v2/video/' + 
@@ -328,7 +321,7 @@ angular.module('FlameSlackApp')
     return function(text) {
       var users = $rootScope.users.map(function(user) {return user.username})
 
-      return text.replace(/@(\w+)/, function(match, username) {
+      return (text||'').replace(/@(\w+)/, function(match, username) {
         var currentUser = $rootScope.user.username == username
 
         if (~users.indexOf(username)) {
@@ -346,7 +339,7 @@ angular.module('FlameSlackApp')
 
   .filter('channel', function($rootScope) {
     return function(text) {
-      return text.replace(/#(\w+)/gi, function(match, channel) {
+      return (text||'').replace(/#(\w+)/gi, function(match, channel) {
         if ($rootScope.channels.hasOwnProperty(channel))
           return '<a href="#/channels/' + channel + '">' + match + '</a>'
         else
@@ -370,7 +363,7 @@ angular.module('FlameSlackApp')
 
 
 function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels, 
-                      isLogged, Messages, Users, Title, FB) {
+                      isLogged, Messages, Users, Title, Direct, FB) {
   if (!isLogged) 
     return $location.path('/login')
 
@@ -379,6 +372,8 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
 
   if (!$scope.channels) $rootScope.channels = channels
   if (!$scope.users) $rootScope.users = Users.all
+  if (!$scope.directNotify) 
+    $rootScope.directNotify = Direct.notifications($scope.user.$id)    
 
   $scope.channel = $routeParams.channel
   $scope.msg = {}
@@ -386,34 +381,6 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
                    $scope.user.lastReaded[$scope.channel]
   
   Title.set($scope.channel)
-
-  // load messages
-  $scope.channels.$ref().on('child_added', function(snap) {
-    if (!$scope.messages) $rootScope.messages = {}
-    $scope.messages[snap.key()] = Messages(snap.key())
-  }) 
-
-  // last readed messages
-  $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
-    $scope.user.lastReaded = $scope.user.lastReaded || {}
-    $scope.user.lastReaded[$scope.channel] = msgs.length && 
-                                             msgs[msgs.length-1].$id
-    $scope.user.$save()
-  })
-
-  // new message
-  new Firebase(FB + 'messages/').on('child_changed', function() {
-    if (!$scope.isTabActive) Title.add('* ')
-  })
-
-  // mention
-  $scope.$on('mention', function() {
-    if (!$scope.isTabActive) Title.add('! ')
-  })
-
-  $scope.$on('tab-active', function(e, active) {
-    if (active) Title.remove()
-  })
 
   $scope.addMessage = function() {
     if (!$scope.msg.text) return 
@@ -443,6 +410,34 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
     $scope.newChannelName = ''
     $scope.isNewChannelFormShowed = false
   }
+
+  // load messages
+  $scope.channels.$ref().on('child_added', function(snap) {
+    if (!$scope.messages) $rootScope.messages = {}
+    $scope.messages[snap.key()] = Messages(snap.key())
+  }) 
+
+  // last readed messages
+  $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
+    $scope.user.lastReaded = $scope.user.lastReaded || {}
+    $scope.user.lastReaded[$scope.channel] = msgs.length && 
+                                             msgs[msgs.length-1].$id
+    $scope.user.$save()
+  })
+
+  // new message
+  new Firebase(FB + 'messages/').on('child_changed', function() {
+    if (!$scope.isTabActive) Title.add('* ')
+  })
+
+  // mention
+  $scope.$on('mention', function() {
+    if (!$scope.isTabActive) Title.add('! ')
+  })
+
+  $scope.$on('tab-active', function(e, active) {
+    if (active) Title.remove()
+  })
 }
 angular.module('FlameSlackApp')
   .controller('DirectCtrl', DirectCtrl)
@@ -489,12 +484,14 @@ angular.module('FlameSlackApp')
   .controller('LoginCtrl', LoginCtrl)
 
 
-function LoginCtrl($scope, $location, Auth, Users, isLogged) {
+function LoginCtrl($scope, $rootScope, $location, Auth, Users, isLogged) {
   $scope.newUser = {}
 
   if (isLogged) return $location.path('/channels')
 
   $scope.login = function() {
+    $rootScope.isLoadingHidden = false
+
     Auth.$authWithPassword($scope.newUser)
       .then(function(authData) {
         Users.setOnline(authData.uid)
@@ -528,13 +525,18 @@ function MainCtrl($scope, $rootScope, $location, Auth, Users, Usernames) {
   $scope.logout = function() {
     Users.setOffline($scope.user.$id)
     Auth.$unauth()
-  }      
+  }     
+
+  $scope.$on('$routeChangeSuccess', function() {
+    $rootScope.isLoadingHidden = true
+  }) 
 }
 angular.module('FlameSlackApp')
   .controller('RegisterCtrl', RegisterCtrl)
 
 
-function RegisterCtrl($scope, $location, Auth, Users, usernames, isLogged) {
+function RegisterCtrl($scope, $rootScope, $location, Auth, Users, 
+                      usernames, isLogged) {
   $scope.usernames = usernames
   $scope.newUser = {}
   
@@ -544,6 +546,8 @@ function RegisterCtrl($scope, $location, Auth, Users, usernames, isLogged) {
     if ($scope.RegisterForm.$invalid) return
     if ($scope.usernames[$scope.newUser.username])
       return console.log('this username already exists')
+
+    $rootScope.isLoadingHidden = false
 
     Auth.$createUser($scope.newUser)
       .then(function(authData) {

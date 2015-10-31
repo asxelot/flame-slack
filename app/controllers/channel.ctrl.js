@@ -23,7 +23,7 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
   Title.set($scope.channel)
 
   $scope.addMessage = function() {
-    if (!$scope.msg.text) return 
+    if ($scope.msgForm.$invalid) return 
 
     $scope.msg.channel = $scope.channel
     $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP

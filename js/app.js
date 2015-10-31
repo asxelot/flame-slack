@@ -151,7 +151,8 @@ angular.module('FlameSlackApp')
   .directive('ngEnter', function() {
     function link($scope, $el) {
       $el.on('input', function() {
-        $el.css('height', $el[0].scrollHeight + 2 + 'px')
+        if ($el[0].offsetHeight < 170) 
+          $el.css('height', $el[0].scrollHeight + 2 + 'px')
       })
 
       $el.on('keydown', function(e) {
@@ -389,7 +390,7 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
   Title.set($scope.channel)
 
   $scope.addMessage = function() {
-    if (!$scope.msg.text) return 
+    if ($scope.msgForm.$invalid) return 
 
     $scope.msg.channel = $scope.channel
     $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP

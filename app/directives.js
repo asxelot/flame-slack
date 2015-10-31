@@ -93,7 +93,8 @@ angular.module('FlameSlackApp')
   .directive('ngEnter', function() {
     function link($scope, $el) {
       $el.on('input', function() {
-        $el.css('height', $el[0].scrollHeight + 2 + 'px')
+        if ($el[0].offsetHeight < 170) 
+          $el.css('height', $el[0].scrollHeight + 2 + 'px')
       })
 
       $el.on('keydown', function(e) {

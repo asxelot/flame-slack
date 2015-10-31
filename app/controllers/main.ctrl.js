@@ -2,7 +2,7 @@ angular.module('FlameSlackApp')
   .controller('MainCtrl', MainCtrl)
 
 
-function MainCtrl($scope, $rootScope, $location, Auth, Users, Usernames) {
+function MainCtrl($scope, $rootScope, $state, Auth, Users, Usernames) {
 
   Auth.$onAuth(function(authData) {
     if (authData) {
@@ -11,20 +11,11 @@ function MainCtrl($scope, $rootScope, $location, Auth, Users, Usernames) {
       $rootScope.isAdmin = Users.isAdmin(authData.uid)
     } else {
       $rootScope.user = null
-      $location.path('/login')
+      $state.go('login')
     }
-  })  
-  
-  $scope.lightbox = function(src) {
-    $scope.lightboxSrc = src
-  }
+  })      
 
-  $scope.logout = function() {
-    Users.setOffline($scope.user.$id)
-    Auth.$unauth()
-  }     
-
-  $scope.$on('$routeChangeSuccess', function() {
+  $scope.$on('$stateChangeSuccess', function() {
     $rootScope.isLoadingHidden = true
   }) 
 }

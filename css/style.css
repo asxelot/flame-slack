@@ -149,6 +149,9 @@ li a.current {
   display: block;
   width: 36px;
 }
+.media-heading a {
+  color: #000;
+}
 .time {
   font-weight: normal;
   font-size: 0.85em;

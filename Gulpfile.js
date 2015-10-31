@@ -1,10 +1,15 @@
 var gulp       = require('gulp'),
+    gutil      = require('gulp-util'),
     ngAnnotate = require('gulp-ng-annotate'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify     = require('gulp-uglify'),
     concat     = require('gulp-concat'),
-    rename     = require('gulp-rename'),
     livereload = require('gulp-livereload')
+
+function onError(msg) {
+  console.log(msg)
+  gutil.beep()
+}
 
 var src = {
   html: ['views/*.html', 'index.html'],
@@ -19,10 +24,8 @@ gulp.task('html', function() {
 gulp.task('js', function() {
   gulp.src(src.js)
       .pipe(sourcemaps.init())
-        .pipe(concat('app.js'))
-        .pipe(gulp.dest('js'))
-        .pipe(ngAnnotate())
-        .pipe(rename('app.min.js'))
+        .pipe(concat('app.min.js'))
+        .pipe(ngAnnotate().on('error', onError))
         .pipe(uglify())
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('js'))

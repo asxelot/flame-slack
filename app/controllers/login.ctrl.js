@@ -2,10 +2,10 @@ angular.module('FlameSlackApp')
   .controller('LoginCtrl', LoginCtrl)
 
 
-function LoginCtrl($scope, $rootScope, $location, Auth, Users, isLogged) {
+function LoginCtrl($scope, $rootScope, $state, Auth, Users, isLogged) {
   $scope.newUser = {}
 
-  if (isLogged) return $location.path('/channels')
+  if (isLogged) return $state.go('messages.channel')
 
   $scope.login = function() {
     $rootScope.isLoadingHidden = false
@@ -13,7 +13,7 @@ function LoginCtrl($scope, $rootScope, $location, Auth, Users, isLogged) {
     Auth.$authWithPassword($scope.newUser)
       .then(function(authData) {
         Users.setOnline(authData.uid)
-        $location.path('/channels')
+        $state.go('messages.channel')
       })
       .catch(console.error)
   }

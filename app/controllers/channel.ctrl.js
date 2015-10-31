@@ -2,21 +2,15 @@ angular.module('FlameSlackApp')
   .controller('ChannelCtrl', ChannelCtrl)  
 
 
-function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels, 
-                      isLogged, Messages, Users, Title, Direct, FB) {
-  if (!isLogged) 
-    return $location.path('/login')
+function ChannelCtrl($rootScope, $scope, $stateParams, $location, channels, 
+                     Messages, Title) {
 
-  if (!$routeParams.channel || !channels.hasOwnProperty($routeParams.channel))
+  if (!$stateParams.channel || !channels.hasOwnProperty($stateParams.channel))
     return $location.path('channels/general')  
-
-  if (!$scope.channels) $rootScope.channels = channels
-  if (!$scope.users) $rootScope.users = Users.all
-  if (!$scope.directNotify) 
-    $rootScope.directNotify = Direct.notifications($scope.user.$id)    
-
-  $scope.channel = $routeParams.channel
+  
   $scope.msg = {}
+  $rootScope.directWith = null
+  $rootScope.channel = $stateParams.channel
   $scope.divider = $scope.user.lastReaded && 
                    $scope.user.lastReaded[$scope.channel]
   
@@ -41,22 +35,6 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
     $scope.messages[$scope.channel].$remove(msg)
   }
 
-  $scope.createChannel = function() {
-    if ($scope.newChannelForm.$invalid) return
-      
-    $scope.channels[$scope.newChannelName] = true
-    $scope.channels.$save()
-    $scope.messages[$scope.newChannelName] = Messages($scope.newChannelName)
-    $scope.newChannelName = ''
-    $scope.isNewChannelFormShowed = false
-  }
-
-  // load messages
-  $scope.channels.$ref().on('child_added', function(snap) {
-    if (!$scope.messages) $rootScope.messages = {}
-    $scope.messages[snap.key()] = Messages(snap.key())
-  }) 
-
   // last readed messages
   $scope.$watchCollection('messages.' + $scope.channel, function(msgs) {
     $scope.user.lastReaded = $scope.user.lastReaded || {}
@@ -65,21 +43,8 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
     $scope.user.$save()
   })
 
-  // new message
-  new Firebase(FB + 'messages/').on('child_changed', function() {
-    if (!$scope.isTabActive) Title.add('* ')
-  }) 
-
   // mention
   $scope.$on('mention', function() {
     if (!$scope.isTabActive) Title.add('! ')
-  })
-
-  $scope.directNotify.$ref().on('child_added', function(snap) {
-    Title.add('! ')
-  })
-
-  $scope.$on('tab-active', function(e, active) {
-    if (active) Title.remove()
   })
 }

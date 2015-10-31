@@ -2,12 +2,12 @@ angular.module('FlameSlackApp')
   .controller('RegisterCtrl', RegisterCtrl)
 
 
-function RegisterCtrl($scope, $rootScope, $location, Auth, Users, 
+function RegisterCtrl($scope, $rootScope, $state, Auth, Users, 
                       usernames, isLogged) {
   $scope.usernames = usernames
   $scope.newUser = {}
   
-  if (isLogged) return $location.path('/channels')
+  if (isLogged) return $state.go('messages.channel')
 
   $scope.register = function() {
     if ($scope.RegisterForm.$invalid) return
@@ -30,7 +30,7 @@ function RegisterCtrl($scope, $rootScope, $location, Auth, Users,
         profile.avatar = authData.password.profileImageURL
         profile.$save()
         Users.all.$save()
-        $location.path('/channels')
+        $state.go('messages.channel')
       })
   }
 }

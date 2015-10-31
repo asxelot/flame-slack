@@ -54,15 +54,15 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .filter('username', function($rootScope) { 
-    return function(text) {
-      var users = $rootScope.users.map(function(user) {return user.username})
+  .filter('username', function() { 
+    return function(text, scope) {
+      var users = scope.users.map(function(user) {return user.username})
 
       return (text||'').replace(/@(\w+)/, function(match, username) {
-        var currentUser = $rootScope.user.username == username
+        var currentUser = scope.user.username == username
 
         if (~users.indexOf(username)) {
-          if (currentUser) $rootScope.$broadcast('mention')
+          if (currentUser) scope.$emmit('mention')
 
           return '<a href="#/messages/' + username + '"' +
                  (currentUser ? 'class="mention"' : '') +
@@ -74,10 +74,10 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .filter('channel', function($rootScope) {
-    return function(text) {
+  .filter('channel', function() {
+    return function(text, scope) {
       return (text||'').replace(/#(\w+)/gi, function(match, channel) {
-        if ($rootScope.channels.hasOwnProperty(channel))
+        if (scope.channels.hasOwnProperty(channel))
           return '<a href="#/channels/' + channel + '">' + match + '</a>'
         else
           return match

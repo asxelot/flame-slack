@@ -1,138 +1,63 @@
-<div class="full-screen">
-  <div class="sidebar">
-    <div class="logged-user">
+<div class="messages">
+  <div class="media message" ng-repeat="message in messages[channel] || messages | orderBy: 'timestamp'">
+    <div class="media-left">
       <a href>
-        <i class="circle" ng-class="user.online ? 'online' : 'offline'"></i>
-        {{user.username}} 
+        <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[channel][$index-1].author.id">
       </a>
-      <a href ng-click="logout()" class="pull-right">log out</a>
+      <span ng-show="message.author.id == messages[channel][$index-1].author.id" class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
     </div>
-    <ul>
-      <li>
-        <p>CHANNELS</p>
-      </li>
-      <li ng-repeat="(ch, _val) in channels">
-        <a href="#/channels/{{ch}}" ng-class="{
-          'current': ch == channel, 
-          'active': messages[ch].length && messages[ch][messages[ch].length-1].$id != user.lastReaded[ch]
-        }">
-          #{{ch}}
-        </a>
-      </li>
-      <li ng-show="isAdmin.$value && !isNewChannelFormShowed">
-        <a href ng-click="isNewChannelFormShowed = !isNewChannelFormShowed">
-          +add channel
-        </a>
-      </li>
-      <li ng-show="isAdmin.$value && isNewChannelFormShowed">
-        <form name="newChannelForm" ng-submit="createChannel()" class="form-inline" novalidate>
-          <div class="form-group">
-            <input type="text" 
-                   ng-model="newChannelName"
-                   ng-show="isAdmin.$value && isNewChannelFormShowed"
-                   ng-keydown="isNewChannelFormShowed = $event.keyCode != 27"
-                   class="form-control"
-                   pattern="^\w{3,15}$"
-                   required>
-            <div class="input-error popover bottom">
-              <div class="arrow"></div>
-              <div class="popover-inner">
-                <div class="popover-content">
-                  Use letters and numbers, more then 2 and less then 10
-                </div>
-              </div>
+    <div class="media-body">
+      <h5 class="media-heading" ng-hide="message.author.id == messages[channel][$index-1].author.id">
+        <a href="#/messages/@{{message.author.username}}">{{message.author.username}}</a>
+        <span class="time text-muted"> {{message.timestamp | date: 'HH:mm'}}</span>
+      </h5>
+      <div class="message-text">
+        <div ng-bind-html="message.text | escape | quote | link:this | username:this | channel:this | code | trustAsHtml"></div>
+        <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
+
+        <div class="embed">
+          <blockquote ng-if="image" class="embed-image">
+            <div class="image-preview">
+              <img ng-src="{{image.src}}" alt="" ng-click="lightbox(image.src)">
             </div>
-          </div>
-          <button type="submit" class="hidden">Submit</button>
-        </form>
-      </li>
-    </ul>
-
-    <ul>
-      <li>
-        <p>USERS</p>
-      </li>
-      <li ng-repeat="u in users">
-        <a href="#/messages/{{u.username}}" 
-           class="user" 
-           ng-if="u.$id != user.$id" 
-           ng-class="{
-            'current': u.username == directWith.username
-        }">
-          <i class="circle" ng-class="u.online ? 'online' : 'offline'"></i>
-          {{u.username}}    
-          <span ng-if="directNotify[u.$id]" class="badge pull-right">
-            {{directNotify[u.$id]}}
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <!-- /.sidebar -->
-
-  <div class="chat" id="chat" ng-autoscroll>
-    <div class="messages">
-      <div class="media message" ng-repeat="message in messages[channel] || messages | orderBy: 'timestamp'">
-        <div class="media-left">
-          <a href>
-            <img ng-src="{{message.author.avatar}}&s=36" alt="avatar" class="madia-object" ng-hide="message.author.id == messages[channel][$index-1].author.id">
-          </a>
-          <span ng-show="message.author.id == messages[channel][$index-1].author.id" class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
-        </div>
-        <div class="media-body">
-          <h5 class="media-heading" ng-hide="message.author.id == messages[channel][$index-1].author.id">
-            {{message.author.username}}
-            <span class="time text-muted">{{message.timestamp | date: 'HH:mm'}}</span>
-          </h5>
-          <div class="message-text">
-            <div ng-bind-html="message.text | escape | quote | link:this | username | channel | code | trustAsHtml"></div>
-            <i class="glyphicon glyphicon-remove" ng-if="isAdmin.$value || user.$id === message.author.id" ng-click="remove(message)"></i>
-
-            <div class="embed">
-              <blockquote ng-if="image" class="embed-image">
-                <div class="image-preview">
-                  <img ng-src="{{image.src}}" alt="" ng-click="lightbox(image.src)">
-                </div>
-              </blockquote>
-              <blockquote ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
-                <div ng-hide="youtube.showIframe" class="youtube-preview">
-                  <i class="glyphicon glyphicon-play"></i>
-                  <img ng-src="http://img.youtube.com/vi/{{youtube.id}}/0.jpg" alt="">
-                </div>
-                <div ng-if="youtube.showIframe">
-                  <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube.id + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
-                </div>
-              </blockquote>
-
-              <blockquote ng-if="vimeo">
-                <div ng-hide="vimeo.showIframe" class="vimeo-preview" ng-click="vimeo.showIframe = true">
-                  <i class="glyphicon glyphicon-play"></i>
-                  <img ng-src="{{vimeo.preview}}" alt="">
-                </div>
-                <div ng-if="vimeo.showIframe">
-                  <iframe ng-src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-                </div>
-              </blockquote>
+          </blockquote>
+          <blockquote ng-if="youtube" class="embed-youtube" ng-click="youtube.showIframe = true">
+            <div ng-hide="youtube.showIframe" class="youtube-preview">
+              <i class="glyphicon glyphicon-play"></i>
+              <img ng-src="http://img.youtube.com/vi/{{youtube.id}}/0.jpg" alt="">
             </div>
-            <!-- /.embed -->
+            <div ng-if="youtube.showIframe">
+              <iframe width="480" height="360" ng-src="{{ 'https://www.youtube.com/embed/' + youtube.id + '?autoplay=1' | trustAsResourceUrl }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </blockquote>
 
-          </div>
+          <blockquote ng-if="vimeo">
+            <div ng-hide="vimeo.showIframe" class="vimeo-preview" ng-click="vimeo.showIframe = true">
+              <i class="glyphicon glyphicon-play"></i>
+              <img ng-src="{{vimeo.preview}}" alt="">
+            </div>
+            <div ng-if="vimeo.showIframe">
+              <iframe ng-src="{{ 'https://player.vimeo.com/video/' + vimeo.id + '?autoplay=1' | trustAsResourceUrl }}" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </blockquote>
         </div>
-        <hr ng-if="message.$id == divider" class="divider" divider>        
+        <!-- /.embed -->
+
       </div>
     </div>
-    <!-- /.messages -->
-
-    <form name="msgForm" id="msg">
-      <div class="form-group">
-        <textarea name="msg" 
-                  ng-model="msg.text" 
-                  ng-focus
-                  ng-enter="addMessage()"
-                  maxlength="500"
-                  class="form-control"
-                  required></textarea>
-      </div>
-    </form>
+    <hr ng-if="message.$id == divider" class="divider" divider>        
   </div>
 </div>
+<!-- /.messages -->
+
+<form name="msgForm" id="msg">
+  <div class="form-group">
+    <textarea name="msg" 
+              ng-model="msg.text" 
+              ng-focus
+              ng-enter="addMessage()"
+              maxlength="500"
+              class="form-control"
+              required></textarea>
+  </div>
+</form>

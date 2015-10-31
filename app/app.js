@@ -1,5 +1,5 @@
 angular.module('FlameSlackApp', [
-    'ngRoute', 
+    'ui.router', 
     'firebase', 
     'ngSanitize'  
   ])  
@@ -8,9 +8,11 @@ angular.module('FlameSlackApp', [
 
   .config(router)
 
-function router($routeProvider) {
-  $routeProvider
-    .when('/login', {
+
+function router($stateProvider, $urlRouterProvider) {
+  $stateProvider
+    .state('login', { 
+      url: '/login',
       controller: 'LoginCtrl',
       templateUrl: 'views/login.html',
       resolve: {
@@ -19,7 +21,8 @@ function router($routeProvider) {
         }
       }
     })
-    .when('/register', {
+    .state('register', {
+      url: '/register',
       controller: 'RegisterCtrl',
       templateUrl: 'views/register.html',
       resolve: {
@@ -31,28 +34,33 @@ function router($routeProvider) {
         }
       }
     })
-    .when('/channels/:channel?', {
-      controller: 'ChannelCtrl',
-      templateUrl: 'views/chat.html',
+    .state('messages', {
+      controller: 'MessagesCtrl',
+      templateUrl: 'views/messages.html',
       resolve: {
-        channels: function(Channels) {
-          return Channels.$loaded()
-        },
         isLogged: function(Auth) {
           return Auth.$waitForAuth()
+        },
+        channels: function(Channels) {
+          return Channels.$loaded()
         }
       }
     })
-    .when('/messages/:user', {
+    .state('messages.user', {
+      url: '/messages/@:user',
       controller: 'DirectCtrl',
       templateUrl: 'views/chat.html',
       resolve: {
-        usernames: function(Usernames) {
+        usernames: function(Usernames) { 
           return Usernames.$loaded()
-        },
-        isLogged: function(Auth) {
-          return Auth.$waitForAuth()
         }
       }
+    }) 
+    .state('messages.channel', {
+      url: '/messages/:channel',
+      controller: 'ChannelCtrl',
+      templateUrl: 'views/chat.html'
     })
+
+    $urlRouterProvider.otherwise("/messages/general");
 }

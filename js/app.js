@@ -260,9 +260,9 @@ angular.module('FlameSlackApp')
       },
       remove: function(s) {
         if (!s)
-          $rootScope.title = $rootScope.title.replace(/[\!\*] /g, '')
+          $rootScope.title = ($rootScope.title||'').replace(/[\!\*] /g, '')
         else if (~$rootScope.title.indexOf(s))
-          $rootScope.title = $rootScope.title.replace(s, '')
+          $rootScope.title = ($rootScope.title||'').replace(s, '')
       }
     }
 
@@ -324,7 +324,7 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .filter('username', function($rootScope) {
+  .filter('username', function($rootScope) { 
     return function(text) {
       var users = $rootScope.users.map(function(user) {return user.username})
 
@@ -334,7 +334,7 @@ angular.module('FlameSlackApp')
         if (~users.indexOf(username)) {
           if (currentUser) $rootScope.$broadcast('mention')
 
-          return '<a href="#/user/' + username + '"' +
+          return '<a href="#/messages/' + username + '"' +
                  (currentUser ? 'class="mention"' : '') +
                  '>' + match + '</a>'
         } else {
@@ -435,11 +435,15 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
   // new message
   new Firebase(FB + 'messages/').on('child_changed', function() {
     if (!$scope.isTabActive) Title.add('* ')
-  })
+  }) 
 
   // mention
   $scope.$on('mention', function() {
     if (!$scope.isTabActive) Title.add('! ')
+  })
+
+  $scope.directNotify.$ref().on('child_added', function(snap) {
+    Title.add('! ')
   })
 
   $scope.$on('tab-active', function(e, active) {
@@ -451,12 +455,12 @@ angular.module('FlameSlackApp')
 
 
 function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
-                    isLogged, Channels, Users, Direct, FB) {
+                    isLogged, Channels, Users, Direct, Title, FB) {
   if (!isLogged) 
     return $location.path('/login')
 
   if (!usernames.hasOwnProperty($routeParams.user))
-    console.log('user not found')
+    return console.log('user not found')
 
   if (!$scope.users) $rootScope.users = Users.all
   if (!$scope.channels) $rootScope.channels = Channels
@@ -470,6 +474,8 @@ function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
   }
   $scope.messages = Direct.messages($scope.user.$id, $scope.directWith.$id)
 
+  Title.set($scope.directWith.username)
+  Title.remove()
   Direct.removeNotifications($scope.user.$id, $scope.directWith.$id)
 
   $scope.addMessage = function() {
@@ -486,6 +492,16 @@ function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
     Direct.notify($scope.user.$id, $scope.directWith.$id)
     $scope.msg = {}
   }
+
+  $scope.remove = function(msg) {
+    $scope.messages.$remove(msg)
+  }
+
+  $scope.directNotify.$ref().on('child_added', function(snap) {
+    Title.add('! ')
+  })  
+
+
 }
 angular.module('FlameSlackApp')
   .controller('LoginCtrl', LoginCtrl)

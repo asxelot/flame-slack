@@ -68,11 +68,15 @@ function ChannelCtrl($scope, $rootScope, $routeParams, $location, channels,
   // new message
   new Firebase(FB + 'messages/').on('child_changed', function() {
     if (!$scope.isTabActive) Title.add('* ')
-  })
+  }) 
 
   // mention
   $scope.$on('mention', function() {
     if (!$scope.isTabActive) Title.add('! ')
+  })
+
+  $scope.directNotify.$ref().on('child_added', function(snap) {
+    Title.add('! ')
   })
 
   $scope.$on('tab-active', function(e, active) {

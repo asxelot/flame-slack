@@ -54,7 +54,7 @@ angular.module('FlameSlackApp')
     }
   })
 
-  .filter('username', function($rootScope) {
+  .filter('username', function($rootScope) { 
     return function(text) {
       var users = $rootScope.users.map(function(user) {return user.username})
 
@@ -64,7 +64,7 @@ angular.module('FlameSlackApp')
         if (~users.indexOf(username)) {
           if (currentUser) $rootScope.$broadcast('mention')
 
-          return '<a href="#/user/' + username + '"' +
+          return '<a href="#/messages/' + username + '"' +
                  (currentUser ? 'class="mention"' : '') +
                  '>' + match + '</a>'
         } else {

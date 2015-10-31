@@ -87,9 +87,9 @@ angular.module('FlameSlackApp')
       },
       remove: function(s) {
         if (!s)
-          $rootScope.title = $rootScope.title.replace(/[\!\*] /g, '')
+          $rootScope.title = ($rootScope.title||'').replace(/[\!\*] /g, '')
         else if (~$rootScope.title.indexOf(s))
-          $rootScope.title = $rootScope.title.replace(s, '')
+          $rootScope.title = ($rootScope.title||'').replace(s, '')
       }
     }
 

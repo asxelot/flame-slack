@@ -3,12 +3,12 @@ angular.module('FlameSlackApp')
 
 
 function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
-                    isLogged, Channels, Users, Direct, FB) {
+                    isLogged, Channels, Users, Direct, Title, FB) {
   if (!isLogged) 
     return $location.path('/login')
 
   if (!usernames.hasOwnProperty($routeParams.user))
-    console.log('user not found')
+    return console.log('user not found')
 
   if (!$scope.users) $rootScope.users = Users.all
   if (!$scope.channels) $rootScope.channels = Channels
@@ -22,6 +22,8 @@ function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
   }
   $scope.messages = Direct.messages($scope.user.$id, $scope.directWith.$id)
 
+  Title.set($scope.directWith.username)
+  Title.remove()
   Direct.removeNotifications($scope.user.$id, $scope.directWith.$id)
 
   $scope.addMessage = function() {
@@ -38,4 +40,14 @@ function DirectCtrl($scope, $rootScope, $routeParams, $location, usernames,
     Direct.notify($scope.user.$id, $scope.directWith.$id)
     $scope.msg = {}
   }
+
+  $scope.remove = function(msg) {
+    $scope.messages.$remove(msg)
+  }
+
+  $scope.directNotify.$ref().on('child_added', function(snap) {
+    Title.add('! ')
+  })  
+
+
 }

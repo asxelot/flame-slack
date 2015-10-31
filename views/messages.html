@@ -52,7 +52,7 @@
       <li>
         <p>USERS</p>
       </li>
-      <li ng-repeat="u in users">
+      <li ng-repeat="u in users | orderBy:'username'">
         <a href="#/messages/@{{u.username}}" 
            class="user" 
            ng-if="u.$id != user.$id" 

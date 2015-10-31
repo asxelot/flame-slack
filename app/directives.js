@@ -4,7 +4,6 @@ angular.module('FlameSlackApp')
     function link($scope, $el) {
       var el = $el[0],
           isScrolled = true,
-          scrolledPosition = 0,
           fullscreenchange = 'webkitfullscreenchange mozfullscreenchange fullscreenchange'
 
       function scrollToBottom() {
@@ -14,13 +13,7 @@ angular.module('FlameSlackApp')
       $el.on('DOMSubtreeModified', scrollToBottom)
 
       // chrome scroll fix
-      angular.element(document).on(fullscreenchange, function(e) {
-        if (e.target != document) {
-          scrolledPosition = e.target.parentElement.offsetTop
-        } else if (scrolledPosition) {
-          el.scrollTop = scrolledPosition
-        }
-      })
+      angular.element(document).on(fullscreenchange, scrollToBottom)
 
       $el.on('scroll', function() {
         isScrolled = el.scrollTop == el.scrollHeight - el.offsetHeight

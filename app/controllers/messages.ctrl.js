@@ -2,14 +2,15 @@ angular.module('FlameSlackApp')
   .controller('MessagesCtrl', MessagesCtrl)  
  
  
-function MessagesCtrl($rootScope, $scope, $stateParams, $location, Auth,
-                      isLogged, Messages, Users, Title, Direct, FB, channels) {
+function MessagesCtrl($scope, $state, Auth, Messages, Users,
+                      Title, Direct, FB,isLogged, channels) {
 
-  if (!isLogged)
-    return $location.path('/login')
+  if (!isLogged) return $state.go('login')
+  if ($state.is('messages')) $state.go('messages.channel')
 
-  $rootScope.users = Users.all
-  $rootScope.channels = channels
+  $scope.messages = {}
+  $scope.users = Users.all
+  $scope.channels = channels
   $scope.directNotify = Direct.notifications($scope.user.$id)    
 
   $scope.createChannel = function() {
@@ -33,7 +34,6 @@ function MessagesCtrl($rootScope, $scope, $stateParams, $location, Auth,
 
   // load messages
   $scope.channels.$ref().on('child_added', function(snap) {
-    if (!$scope.messages) $rootScope.messages = {}
     $scope.messages[snap.key()] = Messages(snap.key())
   }) 
 

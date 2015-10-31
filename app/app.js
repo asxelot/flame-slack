@@ -36,6 +36,7 @@ function router($stateProvider, $urlRouterProvider) {
     })
     .state('messages', {
       controller: 'MessagesCtrl',
+      url: '/messages',
       templateUrl: 'views/messages.html',
       resolve: {
         isLogged: function(Auth) {
@@ -47,7 +48,7 @@ function router($stateProvider, $urlRouterProvider) {
       }
     })
     .state('messages.user', {
-      url: '/messages/@:user',
+      url: '/@:user',
       controller: 'DirectCtrl',
       templateUrl: 'views/chat.html',
       resolve: {
@@ -57,7 +58,7 @@ function router($stateProvider, $urlRouterProvider) {
       }
     }) 
     .state('messages.channel', {
-      url: '/messages/:channel',
+      url: '/:channel',
       controller: 'ChannelCtrl',
       templateUrl: 'views/chat.html'
     })

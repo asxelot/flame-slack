@@ -1,8 +1,5 @@
-- ! notification
 - bans
 - remove channel
 - rules
-- invalid input
 - smiles
 - server timeout
-- message length limit

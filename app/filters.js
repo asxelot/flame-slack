@@ -78,7 +78,7 @@ angular.module('FlameSlackApp')
     return function(text, scope) {
       return (text||'').replace(/#(\w+)/gi, function(match, channel) {
         if (scope.channels.hasOwnProperty(channel))
-          return '<a href="#/channels/' + channel + '">' + match + '</a>'
+          return '<a href="#/messages/' + channel + '">' + match + '</a>'
         else
           return match
       })

@@ -2,15 +2,15 @@ angular.module('FlameSlackApp')
   .controller('ChannelCtrl', ChannelCtrl)  
 
 
-function ChannelCtrl($rootScope, $scope, $stateParams, $location, channels, 
+function ChannelCtrl($rootScope, $scope, $state, channels, 
                      Messages, Title) {
 
-  if (!$stateParams.channel || !channels.hasOwnProperty($stateParams.channel))
-    return $location.path('channels/general')  
+  if (!$state.params.channel || !channels.hasOwnProperty($state.params.channel))
+    return $state.go('messages.channel', { channel: 'general' }) 
   
   $scope.msg = {}
   $rootScope.directWith = null
-  $rootScope.channel = $stateParams.channel
+  $rootScope.channel = $state.params.channel
   $scope.divider = $scope.user.lastReaded && 
                    $scope.user.lastReaded[$scope.channel]
   

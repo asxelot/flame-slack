@@ -23,8 +23,8 @@ body {
   margin: 0;
 }
 
-.form-control.ng-invalid, 
-.form-control.ng-invalid:focus {
+.form-control.ng-dirty.ng-invalid, 
+.form-control.ng-dirty.ng-invalid:focus {
   border-color: red;
 }
 
@@ -41,6 +41,19 @@ blockquote {
 form[name="RegisterForm"], form[name="LoginForm"] {
   margin-top: 50px;
 }
+.form-group {
+  position: relative;
+}
+  .form-group .error {
+    position: absolute;
+    top: -35px;
+    color: red;
+    padding: 0.5em;
+    display: none;
+  }
+  .ng-dirty.ng-invalid-unique-username + .error {
+    display: block;
+  }
 
 /*Sidebar*/
 
@@ -212,6 +225,7 @@ li a.current {
   width: calc(100% - 250px);
   bottom: 0;
   margin-left: 15px;
+  box-shadow: 0 -5px 5px 0 rgba(255, 255, 255, 0.5);
 }
   #msg textarea {
     height: 34px;

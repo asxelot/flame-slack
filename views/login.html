@@ -2,10 +2,10 @@
   <div class="col-sm-4 col-sm-offset-4">
     <form name="LoginForm" ng-submit="login()">
       <div class="form-group">
-        <input type="email" name="email" ng-model="newUser.email" placeholder="Email" class="form-control">
+        <input type="email" name="email" ng-model="newUser.email" placeholder="Email" class="form-control" required>
       </div>
       <div class="form-group">
-        <input type="password" name="password" ng-model="newUser.password" placeholder="Password" class="form-control">
+        <input type="password" name="password" ng-model="newUser.password" placeholder="Password" class="form-control" required>
       </div>
       <button type="submit" class="btn btn-default">Login</button>
       or <a href="#/register">register</a>

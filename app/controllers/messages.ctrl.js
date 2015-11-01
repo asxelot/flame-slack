@@ -22,10 +22,6 @@ function MessagesCtrl($scope, $state, Auth, Messages, Users,
     $scope.newChannelName = ''
     $scope.isNewChannelFormShowed = false
   }
-  
-  $scope.lightbox = function(src) {
-    $scope.lightboxSrc = src
-  }
 
   $scope.logout = function() {
     Users.setOffline($scope.user.$id)

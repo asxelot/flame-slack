@@ -2,9 +2,7 @@ angular.module('FlameSlackApp')
   .controller('DirectCtrl', DirectCtrl)
 
 
-function DirectCtrl($scope, $rootScope, $state, usernames,
-                    isLogged, Channels, Users, Direct, Title, FB) {
-
+function DirectCtrl($scope, $rootScope, $state, usernames, Direct, Title) {
   if (!usernames.hasOwnProperty($state.params.user))
     return console.log('user not found')
 
@@ -16,12 +14,12 @@ function DirectCtrl($scope, $rootScope, $state, usernames,
   }
   $scope.messages = Direct.messages($scope.user.$id, $scope.directWith.$id)
 
-  Title.set($scope.directWith.username)
+  Title.set('@' + $scope.directWith.username)
   Title.remove()
   Direct.removeNotifications($scope.user.$id, $scope.directWith.$id)
 
   $scope.addMessage = function() {
-    if (!$scope.msg.text) return 
+    if ($scope.msgForm.$invalid) return 
 
     $scope.msg.timestamp = Firebase.ServerValue.TIMESTAMP
     $scope.msg.author = {

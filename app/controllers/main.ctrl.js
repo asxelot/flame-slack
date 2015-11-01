@@ -13,7 +13,11 @@ function MainCtrl($scope, $rootScope, $state, Auth, Users, Usernames) {
       $rootScope.user = null
       $state.go('login')
     }
-  })      
+  }) 
+
+  $scope.lightbox = function(src) {
+    $scope.lightboxSrc = src
+  }       
 
   $scope.$on('$stateChangeSuccess', function() {
     $rootScope.isLoadingHidden = true

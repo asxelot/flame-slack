@@ -3,10 +3,9 @@ angular.module('FlameSlackApp', [
     'firebase', 
     'ngSanitize'  
   ])  
-
   .constant('FB', 'https://flame-slack.firebaseio.com/')
-
   .config(router)
+  .config(interceptor)
 
 
 function router($stateProvider, $urlRouterProvider) {
@@ -64,4 +63,21 @@ function router($stateProvider, $urlRouterProvider) {
     })
 
     $urlRouterProvider.otherwise("/messages/general");
+}
+
+function interceptor($httpProvider) {
+  $httpProvider.interceptors.push(function($q, $rootScope) {
+    $rootScope.errors = []
+    
+    function onError(err) {
+      console.error(err)
+      $rootScope.errors.push(err.data)
+      return $q.reject(err)
+    }
+
+    return {
+      requestError: onError,
+      responseError: onError
+    }
+  })
 }

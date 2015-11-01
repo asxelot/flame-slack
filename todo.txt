@@ -3,3 +3,4 @@
 - rules
 - smiles
 - server timeout
+- limit messages

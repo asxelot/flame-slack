@@ -2,9 +2,7 @@ angular.module('FlameSlackApp')
   .controller('ChannelCtrl', ChannelCtrl)  
 
 
-function ChannelCtrl($rootScope, $scope, $state, channels, 
-                     Messages, Title) {
-
+function ChannelCtrl($rootScope, $scope, $state, channels, Messages, Title) {
   if (!$state.params.channel || !channels.hasOwnProperty($state.params.channel))
     return $state.go('messages.channel', { channel: 'general' }) 
   

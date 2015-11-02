@@ -94,8 +94,7 @@ function uniqueUsername() {
 function ngEnter() {
   function link($scope, $el) {
     $el.on('input', function() {
-      if ($el[0].offsetHeight < 170) 
-        $el.css('height', $el[0].scrollHeight + 2 + 'px')
+      $el.css('height', $el[0].scrollHeight + 2 + 'px')
     })
 
     $el.on('keydown', function(e) {

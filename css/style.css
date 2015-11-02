@@ -232,6 +232,7 @@ li a.current {
 }
   #msg textarea {
     height: 34px;
+    max-height: 174px;
     resize: none;
   }
 .mention {

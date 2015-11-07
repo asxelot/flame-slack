@@ -28,17 +28,13 @@ function MessagesCtrl($scope, $state, Auth, Messages, Users,
     Auth.$unauth()
   }   
 
-  // load messages for new channel
+  // load messages
   $scope.channels.$ref().on('child_added', function(snap) {
     $scope.messages[snap.key()] = Messages(snap.key())
-  }) 
-
-  // new message notification
-  angular.forEach($scope.messages, function(channel) {
-    channel.$ref().on('child_added', function() {
+    $scope.messages[snap.key()].$ref().on('child_added', function() {
       if (!$scope.isTabActive) Title.add('* ')
     })
-  })
+  }) 
 
   $scope.directNotify.$ref().on('child_added', function(snap) {
     Title.add('! ')

@@ -28,15 +28,17 @@ function MessagesCtrl($scope, $state, Auth, Messages, Users,
     Auth.$unauth()
   }   
 
-  // load messages
+  // load messages for new channel
   $scope.channels.$ref().on('child_added', function(snap) {
     $scope.messages[snap.key()] = Messages(snap.key())
   }) 
 
-  // new message
-  new Firebase(FB + 'messages/').on('child_changed', function() {
-    if (!$scope.isTabActive) Title.add('* ')
-  }) 
+  // new message notification
+  angular.forEach($scope.messages, function(channel) {
+    channel.$ref().on('child_added', function() {
+      if (!$scope.isTabActive) Title.add('* ')
+    })
+  })
 
   $scope.directNotify.$ref().on('child_added', function(snap) {
     Title.add('! ')
@@ -44,9 +46,5 @@ function MessagesCtrl($scope, $state, Auth, Messages, Users,
 
   $scope.$on('tab-active', function(e, active) {
     if (active) Title.remove()
-  })  
-
-  $scope.directNotify.$ref().on('child_added', function(snap) {
-    Title.add('! ')
-  })   
+  }) 
 }

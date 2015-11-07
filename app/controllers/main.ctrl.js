@@ -3,7 +3,8 @@ angular.module('FlameSlackApp')
 
 
 function MainCtrl($scope, $rootScope, $state, Auth, Users, Usernames) {
-
+  $rootScope.isTabActive = true
+  
   Auth.$onAuth(function(authData) {
     if (authData) {
       $rootScope.user = Users.getProfile(authData.uid)

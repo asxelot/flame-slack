@@ -1,39 +1,44 @@
 var gulp       = require('gulp'),
-    gutil      = require('gulp-util'),
     ngAnnotate = require('gulp-ng-annotate'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify     = require('gulp-uglify'),
     concat     = require('gulp-concat'),
     livereload = require('gulp-livereload')
 
-function onError(msg) {
-  console.log(msg)
-  gutil.beep()
+var paths = {
+  src: {
+    html: ['views/*.html', 'index.html'],
+    js  : 'app/**/*.js'
+  },
+  dist: {
+    css: 'css',
+    js: 'js'
+  }
 }
 
-var src = {
-  html: ['views/*.html', 'index.html'],
-  js  : 'app/**/*.js'
+function onError(err) {
+  console.error('\007', err.toString())
+  this.emit('end')
 }
 
 gulp.task('html', function() {
-  gulp.src('index.html')
-      .pipe(livereload())
+  return gulp.src(paths.src.html)
+    .pipe(livereload())
 })
 
-gulp.task('js', function() {
-  gulp.src(src.js)
-      .pipe(sourcemaps.init())
-        .pipe(concat('app.min.js'))
-        .pipe(ngAnnotate().on('error', onError))
-        .pipe(uglify())
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('js'))
-      .pipe(livereload())
+gulp.task('minjs', function() {
+  return gulp.src(paths.src.js)
+    .pipe(sourcemaps.init())
+      .pipe(ngAnnotate().on('error', onError))
+      .pipe(concat('app.min.js'))
+      .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(paths.dist.js))
+    .pipe(livereload())
 })
 
-gulp.task('default', function() {
+gulp.task('default', ['minjs'], function() {
   livereload.listen()
-  gulp.watch(src.html, ['html'])
-  gulp.watch(src.js, ['js'])
+  gulp.watch(paths.src.html, ['html'])
+  gulp.watch(paths.src.js, ['minjs'])
 })
